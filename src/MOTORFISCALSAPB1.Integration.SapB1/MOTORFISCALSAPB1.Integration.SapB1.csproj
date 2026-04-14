@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>MOTORFISCALSAPB1.Integration.SapB1</RootNamespace>
+    <AssemblyName>MOTORFISCALSAPB1.Integration.SapB1</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Polly" Version="8.4.1" />
+    <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Application\MOTORFISCALSAPB1.Application.csproj" />
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Domain\MOTORFISCALSAPB1.Domain.csproj" />
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Shared\MOTORFISCALSAPB1.Shared.csproj" />
+  </ItemGroup>
+</Project>

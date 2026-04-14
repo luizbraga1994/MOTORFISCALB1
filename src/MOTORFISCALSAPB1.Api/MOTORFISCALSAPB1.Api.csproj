@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>MOTORFISCALSAPB1.Api</RootNamespace>
+    <AssemblyName>MOTORFISCALSAPB1.Api</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Application\MOTORFISCALSAPB1.Application.csproj" />
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Domain\MOTORFISCALSAPB1.Domain.csproj" />
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Infrastructure\MOTORFISCALSAPB1.Infrastructure.csproj" />
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Integration.SapB1\MOTORFISCALSAPB1.Integration.SapB1.csproj" />
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Shared\MOTORFISCALSAPB1.Shared.csproj" />
+  </ItemGroup>
+</Project>
