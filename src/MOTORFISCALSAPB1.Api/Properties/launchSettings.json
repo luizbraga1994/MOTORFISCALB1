@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "MOTORFISCALSAPB1.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5080;https://localhost:5443",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

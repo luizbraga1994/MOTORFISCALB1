@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>MOTORFISCALSAPB1.Domain</RootNamespace>
+    <AssemblyName>MOTORFISCALSAPB1.Domain</AssemblyName>
+  </PropertyGroup>
+</Project>
