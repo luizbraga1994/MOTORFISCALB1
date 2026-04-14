@@ -5,11 +5,18 @@ Permite iterar (F5 + breakpoint) conectado ao SAP B1 Client real.
 
 ## Pré-requisitos
 
-1. **SAP B1 Client 9.3+ instalado** (32-bit) na mesma máquina.
-2. **Visual Studio 2022** com a carga `.NET desktop development`.
-3. **Executar o VS2022 como Administrador** (clique direito → Run as
+1. **SAP B1 Client** instalado na mesma máquina (32-bit **ou** 64-bit —
+   o bitness do client determina com qual plataforma você vai debugar).
+2. **.NET 10 SDK** (inclui o Desktop Runtime `win-x86` e `win-x64`).
+3. **Visual Studio 2022** com as cargas `.NET desktop development` e
+   `.NET Multi-platform App UI development` (para WinForms em .NET 10).
+4. **Executar o VS2022 como Administrador** (clique direito → Run as
    Administrator). Requerido porque SAPbouiCOM é COM out-of-process.
-4. Build em **x86** obrigatório. O `.csproj` já força `PlatformTarget=x86`.
+5. Build na plataforma **que bate com o bitness do SAP B1 Client**:
+   - Client 32-bit → `Platform = x86`.
+   - Client 64-bit → `Platform = x64`.
+   O `.csproj` expõe `<Platforms>x86;x64</Platforms>`; escolha no
+   Configuration Manager.
 
 ## Passo 1 — Adicionar referências COM/Interop do SAP
 
@@ -19,9 +26,14 @@ do SAP B1 Client (não redistribuíveis):
 1. Solution Explorer → `MOTORFISCALSAPB1.Addon` → `Dependencies` → clique
    direito → **Add COM Reference** (ou **Add Project Reference →
    Browse**).
-2. Adicionar:
-   - `C:\Program Files (x86)\SAP\SAP Business One\SAPbouiCOM.dll`
-   - `C:\Program Files (x86)\SAP\SAP Business One\SAPbobsCOM.dll`
+2. Adicionar, conforme o bitness do SAP B1 Client instalado:
+   - **Client 32-bit** (`C:\Program Files (x86)\SAP\SAP Business One\`):
+     `SAPbouiCOM.dll`, `SAPbobsCOM.dll`.
+   - **Client 64-bit** (`C:\Program Files\SAP\SAP Business One\`):
+     mesmas DLLs, caminho sem `(x86)`.
+   Os Interop assemblies são AnyCPU — funcionam com `Platform=x86` **e**
+   `x64`. O que muda é o bitness do processo em runtime, resolvendo o
+   COM server correto.
 3. Para **cada** referência adicionada, no painel Properties:
    - `Copy Local` = **False** (o SAP B1 Client fornece as DLLs em runtime;
      copiá-las quebra versão)
@@ -31,8 +43,11 @@ do SAP B1 Client (não redistribuíveis):
 ## Passo 2 — Configurar a Platform
 
 1. Build → Configuration Manager.
-2. Active solution platform = **x86** (ou crie se só houver `Any CPU`).
-3. Garantir que `MOTORFISCALSAPB1.Addon` está marcado como Build para x86.
+2. Active solution platform = **x86** ou **x64** (bater com o bitness do
+   SAP B1 Client instalado).
+3. Garantir que `MOTORFISCALSAPB1.Addon` está marcado como Build **só**
+   para a plataforma escolhida (nas outras, desmarque Build para evitar
+   erros de referência COM apontando pro bitness oposto).
 
 ## Passo 3 — Abrir o SAP B1 Client
 
@@ -85,13 +100,14 @@ Pontos sugeridos para breakpoint:
 ## Troubleshooting
 
 **`SboGuiApi.Connect` lança `HRESULT 0x80004005`**
-→ VS não está como Admin, ou build ≠ x86, ou SAP B1 Client está em outra
-sessão Windows.
+→ VS não está como Admin, ou o bitness do build não bate com o SAP B1
+Client, ou o Client está em outra sessão Windows.
 
-**`COMException: Class not registered`**
-→ O SAP B1 Client não está instalado, ou está em versão 64-bit enquanto
-o projeto é x86. Rebuilde em x64 e troque as referências para as DLLs
-em `C:\Program Files\SAP\SAP Business One\`.
+**`COMException: Class not registered` (HRESULT `0x80040154`)**
+→ **Mismatch de bitness**. Se o SAP B1 Client é 64-bit, use
+`Platform=x64` e aponte referências para `C:\Program Files\SAP\SAP
+Business One\`. Se é 32-bit, use `Platform=x86` e
+`C:\Program Files (x86)\SAP\SAP Business One\`.
 
 **Addon conecta mas `_sapApp.Company.CompanyDB` vem vazio**
 → A sessão do SAP B1 Client não fez login ainda. Logue antes do F5.
@@ -109,11 +125,12 @@ e "Require source files to exactly match the original version".
 
 Com o VS anexado, você pode:
 
-- **Edit & Continue**: mudanças em métodos sem reiniciar o addon (limitado
-  em net48).
+- **Edit & Continue**: mudanças em métodos sem reiniciar o addon (em
+  .NET 10 funciona bem com Hot Reload no VS2022 para muitos casos).
 - **Stop (Shift+F5)** e **F5** para reiniciar — o SAP B1 Client continua
   aberto e preserva a sessão.
-- Log em tempo real em `src\MOTORFISCALSAPB1.Addon\bin\x86\Debug\logs\`
+- Log em tempo real em
+  `src\MOTORFISCALSAPB1.Addon\bin\<x86|x64>\Debug\logs\`
   (Serilog rolling file).
 
 ## Próximos passos

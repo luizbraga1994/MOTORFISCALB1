@@ -36,7 +36,7 @@ tempo real, sem usar o motor fiscal nativo do SAP B1.
 | `MOTORFISCALSAPB1.Integration.SapB1` | Service Layer client, MD services, TaxCodes |
 | `MOTORFISCALSAPB1.Api` | HTTP API (Minimal APIs), SignalR, Swagger |
 | `MOTORFISCALSAPB1.Worker` | BackgroundService de refresh de cache |
-| `MOTORFISCALSAPB1.Addon` | .NET Framework 4.8 x86, UI API/DI API, debounce |
+| `MOTORFISCALSAPB1.Addon` | .NET 10 (net10.0-windows) x86/x64, UI API/DI API, debounce |
 | `MOTORFISCALSAPB1.Tests` | xUnit, FluentAssertions, Moq |
 
 ## Fluxo de resolução fiscal

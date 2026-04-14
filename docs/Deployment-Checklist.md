@@ -85,13 +85,13 @@ Add-Ons → Administração de Add-On → Add-Ons em execução*.
 
 ```powershell
 # PowerShell como Administrador
-# Confirmar runtime .NET 8
-dotnet --list-runtimes | Select-String "Microsoft.NETCore.App 8"
-dotnet --list-runtimes | Select-String "Microsoft.AspNetCore.App 8"
+# Confirmar runtime .NET 10
+dotnet --list-runtimes | Select-String "Microsoft.NETCore.App 10"
+dotnet --list-runtimes | Select-String "Microsoft.AspNetCore.App 10"
 ```
 
-Se não aparecer, baixar o **.NET 8 Hosting Bundle**:
-<https://dotnet.microsoft.com/download/dotnet/8.0>
+Se não aparecer, baixar o **.NET 10 Hosting Bundle**:
+<https://dotnet.microsoft.com/download/dotnet/10.0>
 
 Firewall (apenas API):
 
@@ -195,15 +195,21 @@ Feito uma vez, via SAP B1 Server Manager:
 ```powershell
 # No dev local — gerar o ZIP:
 pwsh .\build\build-addon-lightweight.ps1
-# Resultado: dist\MOTORFISCALSAPB1.Addon-1.0.0-x86.zip
+# Resultado: dois ZIPs em dist\
+#   MOTORFISCALSAPB1.Addon-1.0.0-x86.zip
+#   MOTORFISCALSAPB1.Addon-1.0.0-x64.zip
 ```
 
 No **SAP B1 Server Manager → Extension Manager**:
 
-1. *Upload Extensions* → selecionar o ZIP gerado.
-2. *Company Assignment* → atribuir à(s) empresa(s).
-3. Marcar **"Install Mode = Mandatory"** e **"Start Mode = Automatic"**.
-4. Em cada client, abrir o SAP B1: o addon é baixado e inicia sozinho
+1. Confirmar o bitness do SAP B1 Client instalado nas estações
+   (Help → About → procurar "64-bit").
+2. *Upload Extensions* → selecionar o ZIP **correspondente** ao bitness:
+   - Client 32-bit → `...-x86.zip`
+   - Client 64-bit → `...-x64.zip`
+3. *Company Assignment* → atribuir à(s) empresa(s).
+4. Marcar **"Install Mode = Mandatory"** e **"Start Mode = Automatic"**.
+5. Em cada client, abrir o SAP B1: o addon é baixado e inicia sozinho
    (~30s).
 
 Critério: no client, *Administração → Add-Ons → Add-Ons em execução*
@@ -286,7 +292,7 @@ Para o **addon**: no Server Manager, *Extension Manager* →
 
 | # | Passo | OK |
 |---|---|---|
-| 1 | Windows Server 2019+ com .NET 8 Hosting Bundle | ☐ |
+| 1 | Windows Server 2019+ com .NET 10 Hosting Bundle | ☐ |
 | 2 | Firewall porta 5080 liberada | ☐ |
 | 3 | Conta de serviço `mfsap-svc` criada com `Log on as service` | ☐ |
 | 4 | Repositório clonado em `D:\ProjetosGit\MOTORFISCALB1` | ☐ |
@@ -300,7 +306,7 @@ Para o **addon**: no Server Manager, *Extension Manager* →
 | 12 | Serviços `Running` após `sc.exe start` | ☐ |
 | 13 | `/health` retorna `Healthy` | ☐ |
 | 14 | Worker loga refresh do cache de regras | ☐ |
-| 15 | Addon ZIP gerado e publicado no Extension Manager | ☐ |
+| 15 | Addon ZIPs (x86 + x64) gerados; o do bitness certo publicado no Extension Manager | ☐ |
 | 16 | Addon conectado em pelo menos 1 client SAP B1 | ☐ |
 | 17 | Smoke test `/api/fiscal/resolve` passou | ☐ |
 | 18 | Smoke test addon no documento de marketing passou | ☐ |

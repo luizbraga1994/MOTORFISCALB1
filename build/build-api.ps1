@@ -8,8 +8,8 @@
     - Opcionalmente instala/reinstala como Windows Service via sc.exe
 
     Self-contained = false assume que o Windows Server alvo tem o
-    .NET 8 Runtime instalado (hosting bundle). Se preferir pacote
-    auto-contido, passe -SelfContained.
+    .NET 10 Hosting Bundle instalado. Se preferir pacote auto-contido,
+    passe -SelfContained (elimina o pre-requisito ao custo de ~80MB).
 
 .PARAMETER Install
     Se presente, cria/reinstala o servico apontando para o diretorio

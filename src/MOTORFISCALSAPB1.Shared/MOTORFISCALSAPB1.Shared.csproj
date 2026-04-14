@@ -3,7 +3,6 @@
     <RootNamespace>MOTORFISCALSAPB1.Shared</RootNamespace>
     <AssemblyName>MOTORFISCALSAPB1.Shared</AssemblyName>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
-  </ItemGroup>
+  <!-- System.Text.Json vem com o runtime .NET 10 — nao precisa
+       PackageReference. -->
 </Project>

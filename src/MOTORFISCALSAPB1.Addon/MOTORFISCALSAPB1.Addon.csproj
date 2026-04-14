@@ -1,20 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!--
-      Addon LightWeight SAP B1:
-      - Empacotamento via ZIP (sem MSI). O SAP B1 Server distribui o pacote
-        automaticamente para o client na primeira execucao, extraindo em
-        %LOCALAPPDATA%\SAP\SAP Business One\AddOns\MOTORFISCALSAPB1.
+      Addon LightWeight SAP B1 — .NET 10 multi-bitness (x86 + x64).
+
+      - TargetFramework: net10.0-windows (requerido por WinForms / COM).
+      - Platforms: x86;x64 — gera dois binarios, um por bitness, para
+        casar com o bitness do SAP B1 Client instalado (o registro COM
+        do SAPbouiCOM/SAPbobsCOM e bitness-specifico).
+      - RuntimeIdentifiers: usado pelo publish self-contained.
       - O entrypoint (este .exe) e invocado pelo AddOn Launcher do SAP B1
-        passando a connection string como primeiro argumento.
+        em processo separado, passando a connection string em args[0].
+      - Empacotamento via ZIP (sem MSI). Scripts em build/ geram
+        MOTORFISCALSAPB1.Addon-<versao>-x86.zip e ...-x64.zip.
     -->
     <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
-    <LangVersion>10</LangVersion>
-    <Nullable>disable</Nullable>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Platforms>x86</Platforms>
-    <PlatformTarget>x86</PlatformTarget>
+    <Platforms>x86;x64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <!-- NAO fixar PlatformTarget aqui: a plataforma vem por
+         /p:Platform=x86 ou /p:Platform=x64 nos scripts de build. -->
     <RootNamespace>MOTORFISCALSAPB1.Addon</RootNamespace>
     <AssemblyName>MOTORFISCALSAPB1.Addon</AssemblyName>
     <!-- Copia toda DLL de PackageReference para o output (requerido para
@@ -26,12 +31,17 @@
     <!-- NOTE: Adicione as referencias a SAPbouiCOM.dll e SAPbobsCOM.dll
          manualmente apos clonar o repositorio. Elas vem da instalacao do
          SAP Business One Client e nao podem ser redistribuidas via NuGet.
-         Marque Copy Local = False (o client do SAP ja possui as DLLs). -->
+         Marque Copy Local = False (o client do SAP ja possui as DLLs).
+         Os Interop assemblies sao AnyCPU — o mesmo arquivo serve x86
+         e x64; o binding pro COM acontece em runtime. -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <!-- ConfigurationManager / App.config no .NET 10 precisa do pacote
+         (no .NET Framework vinha built-in). -->
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MOTORFISCALSAPB1.Shared\MOTORFISCALSAPB1.Shared.csproj" />

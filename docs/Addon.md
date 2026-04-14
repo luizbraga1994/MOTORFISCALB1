@@ -1,10 +1,15 @@
 # Addon SAP B1 — MOTORFISCALSAPB1 (LightWeight)
 
-Projeto **.NET Framework 4.8 x86** (`MOTORFISCALSAPB1.Addon`) empacotado como
-**addon LightWeight** — sem instalador MSI, sem InstallShield, sem cópia
-manual por estação. Apenas um **ZIP auto-contido** registrado no SAP B1
-Server, que o AddOn Launcher distribui automaticamente para cada cliente na
-primeira execução.
+Projeto **.NET 10 (`net10.0-windows`) multi-bitness (x86 + x64)**
+(`MOTORFISCALSAPB1.Addon`) empacotado como **addon LightWeight** — sem
+instalador MSI, sem InstallShield, sem cópia manual por estação. Apenas um
+**ZIP auto-contido** registrado no SAP B1 Server, que o AddOn Launcher
+distribui automaticamente para cada cliente na primeira execução.
+
+São gerados **dois pacotes** (`…-x86.zip` e `…-x64.zip`) porque as COM DLLs
+do SAP B1 Client (`SAPbouiCOM`, `SAPbobsCOM`) são bitness-específicas: o
+registro COM só existe no bitness da instalação do Client, então o addon
+precisa rodar no mesmo bitness.
 
 ## O que é LightWeight?
 
@@ -19,31 +24,49 @@ primeira execução.
 
 ## Estrutura do pacote
 
-Depois de rodar `build/build-addon-lightweight.ps1`, o ZIP contém:
+Depois de rodar `build/build-addon-lightweight.ps1`, cada ZIP contém:
 
 ```
 MOTORFISCALSAPB1.Addon.exe          <- entry point (STAThread Main)
 MOTORFISCALSAPB1.Addon.exe.config   <- App.config com MF.ApiBaseUrl etc.
 MOTORFISCALSAPB1.Shared.dll
+MOTORFISCALSAPB1.Addon.dll          <- host .NET runtime (apphost pattern)
+<runtime .NET 10>                   <- ~60MB (coreclr, WinForms, BCL)
 Newtonsoft.Json.dll
 Serilog.dll
 Serilog.Sinks.File.dll
+System.Configuration.ConfigurationManager.dll
 addon.manifest.json                 <- metadata (name, version, platform)
 ```
 
 **Não** inclui `SAPbouiCOM.dll` / `SAPbobsCOM.dll`: essas DLLs vêm com o
-SAP B1 Client instalado na máquina e são resolvidas em runtime. O script de
-build remove automaticamente se tiverem sido copiadas por engano.
+SAP B1 Client instalado na máquina e são resolvidas em runtime via COM. O
+script de build remove automaticamente se tiverem sido copiadas por engano.
+Os Interop assemblies são **AnyCPU** — o mesmo arquivo serve x86 e x64.
 
 ## Build
 
-No Windows, com .NET SDK e SAP B1 Client instalados:
+No Windows, com .NET 10 SDK e SAP B1 Client instalados:
 
 ```powershell
+# Gera os DOIS pacotes (default):
 pwsh .\build\build-addon-lightweight.ps1 -Version 1.0.0
+
+# Só um bitness:
+pwsh .\build\build-addon-lightweight.ps1 -Version 1.0.0 -Platform x64
+
+# Framework-dependent (ZIP pequeno, exige .NET 10 no client):
+pwsh .\build\build-addon-lightweight.ps1 -Version 1.0.0 -FrameworkDependent
 ```
 
-Artefato gerado em `dist/MOTORFISCALSAPB1.Addon-1.0.0-x86.zip`.
+Artefatos gerados:
+
+- `dist/MOTORFISCALSAPB1.Addon-1.0.0-x86.zip` (para SAP B1 Client 32-bit)
+- `dist/MOTORFISCALSAPB1.Addon-1.0.0-x64.zip` (para SAP B1 Client 64-bit)
+
+Cada ZIP self-contained tem ~60MB porque embarca o runtime .NET 10. É
+download único por client (cacheado pelo SAP em
+`%LOCALAPPDATA%\SAP\...`).
 
 ## Registro no SAP B1
 
@@ -150,5 +173,11 @@ detecta a nova versão e redistribui.
 - **Travou o SAP B1 Client**: provavelmente recursão não suprimida — use
   os breakpoints em `DocumentEventHandler.OnItemEvent` e confirme que
   `_suppress` é setado antes de escrever na matriz.
-- **Erro de arquitetura**: o pacote **é x86**. Se o SAP B1 Client estiver
-  em 64-bit (casos raros), rebuilde com `/p:Platform=x64`.
+- **Erro de arquitetura (`Class not registered`, HRESULT `0x80040154`)**:
+  você fez upload do ZIP com bitness errado. Confirme o bitness do Client
+  (`Help → About SAP Business One` mostra `64-bit` ou não) e envie o ZIP
+  correspondente (`-x86.zip` ou `-x64.zip`). COM activation falha
+  silenciosamente em bitness mismatch, mesmo que o resto do addon carregue.
+- **`Could not load file or assembly 'System.Private.CoreLib'`**: ZIP
+  framework-dependent sem o .NET 10 Desktop Runtime instalado. Instale o
+  runtime ou use o pacote self-contained.

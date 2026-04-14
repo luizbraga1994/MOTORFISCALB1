@@ -4,9 +4,9 @@ Os três componentes do motor são empacotados separadamente:
 
 | Componente | Runtime | Deploy |
 |---|---|---|
-| `MOTORFISCALSAPB1.Addon` | .NET Framework 4.8 x86 | LightWeight Extension ZIP → SAP Server |
-| `MOTORFISCALSAPB1.Api` | .NET 8 | **Windows Service** |
-| `MOTORFISCALSAPB1.Worker` | .NET 8 | **Windows Service** |
+| `MOTORFISCALSAPB1.Addon` | .NET 10 (net10.0-windows) x86 + x64 | LightWeight Extension ZIP → SAP Server |
+| `MOTORFISCALSAPB1.Api` | .NET 10 | **Windows Service** |
+| `MOTORFISCALSAPB1.Worker` | .NET 10 | **Windows Service** |
 
 Este guia cobre API e Worker. Para o Addon, ver [`Addon.md`](Addon.md).
 Para o **runbook** com checklist passo-a-passo, smoke test e rollback,
@@ -15,7 +15,7 @@ ver [`Deployment-Checklist.md`](Deployment-Checklist.md).
 ## Pré-requisitos no servidor
 
 - **Windows Server 2019+** (ou Windows 10/11).
-- **.NET 8 Hosting Bundle** instalado (ou publicar com `-SelfContained`).
+- **.NET 10 Hosting Bundle** instalado (ou publicar com `-SelfContained`).
 - **Sap.Data.Hana.Core.v2.1**: o pacote NuGet já traz as DLLs; não precisa
   instalar client HANA separado no servidor.
 - Firewall: liberar porta **5080** (API) entre o servidor e os clientes
