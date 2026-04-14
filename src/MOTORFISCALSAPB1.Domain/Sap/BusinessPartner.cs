@@ -14,7 +14,10 @@ public class BusinessPartner
     public string InscricaoEstadual { get; set; } = string.Empty; // CRD7.TaxId1 ou OCRD.MYFTaxId (depende da instalação)
 
     public bool ContribuinteIcms { get; set; }
-    public bool ConsumidorFinal { get; set; }
+
+    // NOTA: "Consumidor final" NAO e atributo do BP e sim de cada transacao.
+    // Vem do campo IndFinal do header do documento de marketing (OINV, ODLN,
+    // ORIN, ORDR, OPCH, OPOR, ...) e trafega pelo FiscalResolutionRequest.
 
     public BusinessPartnerAddress? EnderecoEntrega { get; set; }
     public BusinessPartnerAddress? EnderecoCobranca { get; set; }

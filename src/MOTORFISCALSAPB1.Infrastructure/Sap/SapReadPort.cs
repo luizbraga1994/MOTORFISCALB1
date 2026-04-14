@@ -25,10 +25,12 @@ public sealed class SapReadPort : ISapReadPort
 
     public async Task<BusinessPartner?> GetBusinessPartnerAsync(string cardCode, CancellationToken ct)
     {
+        // NOTA: "ConsumidorFinal" NAO e lido daqui. Eh atributo do header do
+        // documento de marketing (OINV/ODLN/etc.) via campo nativo IndFinal.
+        // Viaja pelo FiscalResolutionRequest.ConsumidorFinal e nao pelo BP.
         const string sqlHeader = @"
 SELECT
   ""CardCode"", ""CardName"", ""CardType"", ""LicTradNum"",
-  COALESCE(""U_MF_CONSFINAL"", 'N') AS ""ConsFinalFlag"",
   ""U_MF_TPCLIENTE"" AS ""TipoCliente""
 FROM {0}.""OCRD""
 WHERE ""CardCode"" = :cardCode";
@@ -71,7 +73,6 @@ ORDER BY ""Address"" ASC";
             CardName = header.CardName ?? string.Empty,
             CardType = header.CardType ?? string.Empty,
             LicTradNum = header.LicTradNum ?? string.Empty,
-            ConsumidorFinal = string.Equals(header.ConsFinalFlag, "Y", StringComparison.OrdinalIgnoreCase),
             InscricaoEstadual = fiscal?.InscricaoEstadual ?? string.Empty,
             ContribuinteIcms = !string.IsNullOrWhiteSpace(fiscal?.InscricaoEstadual) &&
                                !string.Equals(fiscal.InscricaoEstadual, "ISENTO", StringComparison.OrdinalIgnoreCase),
@@ -202,7 +203,6 @@ WHERE ""TableID"" = :tableId AND ""AliasID"" = :aliasId";
         public string? CardName { get; set; }
         public string? CardType { get; set; }
         public string? LicTradNum { get; set; }
-        public string? ConsFinalFlag { get; set; }
         public string? TipoCliente { get; set; }
     }
 

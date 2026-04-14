@@ -110,12 +110,20 @@ namespace MOTORFISCALSAPB1.Addon
                     return;
                 }
 
+                // IndFinal e campo nativo do header do documento (Y/N) na localizacao BR.
+                // Item UID pode variar por versao; tentamos os nomes mais comuns.
+                var indFinal = TryGetEditValue(form, "IndFinal")
+                               ?? TryGetEditValue(form, "U_IndFinal")
+                               ?? "N";
+                var consFinal = string.Equals(indFinal, "Y", StringComparison.OrdinalIgnoreCase);
+
                 var req = new FiscalResolutionRequest
                 {
                     CardCode = cardCode,
                     BplId = bplId,
                     ItemCode = itemCode,
                     TipoOperacao = Enum.TryParse<TipoOperacao>(tipoOp, out var t) ? t : TipoOperacao.VendaInterna,
+                    ConsumidorFinal = consFinal,
                     CorrelationId = correlation
                 };
 

@@ -47,7 +47,8 @@ public sealed class FiscalContextBuilder : IFiscalContextBuilder
             Cnpj = bp.LicTradNum,
             InscricaoEstadual = bp.InscricaoEstadual,
             ContribuinteICMS = bp.ContribuinteIcms,
-            ConsumidorFinal = bp.ConsumidorFinal,
+            // ConsumidorFinal vem do doc (IndFinal), repassado pelo caller no request.
+            ConsumidorFinal = req.ConsumidorFinal,
             UfDestino = end?.State ?? string.Empty,
             CidadeDestino = end?.City ?? string.Empty,
             BplId = branch.BplId,

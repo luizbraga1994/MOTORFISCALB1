@@ -31,7 +31,7 @@ finalidade. O manifesto autoritativo é `manifests/structure.json`.
 
 | Entidade | CUFD.TableID | SL POST TableName | SL POST Name | Coluna física HANA |
 |---|---|---|---|---|
-| UDF em tabela padrão (OCRD.U_MF_CONSFINAL) | `OCRD` | `OCRD` | `MF_CONSFINAL` | `U_MF_CONSFINAL` |
+| UDF em tabela padrão (OCRD.U_MF_TPCLIENTE) | `OCRD` | `OCRD` | `MF_TPCLIENTE` | `U_MF_TPCLIENTE` |
 | UDF em UDT (@MF_RULE.U_DESCRICAO) | `@MF_RULE` | `MF_RULE` | `DESCRICAO` | `U_DESCRICAO` |
 
 O helper `SapNamingConventions` (em `MOTORFISCALSAPB1.Shared.Helpers`) é a
@@ -50,6 +50,6 @@ O hub SignalR emite mensagens:
 
 ```json
 { "phase": "UserTables",  "item": "MF_RULE",      "status": "Created" }
-{ "phase": "UserFields",  "item": "OCRD.MF_CONSFINAL", "status": "Exists" }
+{ "phase": "UserFields",  "item": "OCRD.MF_TPCLIENTE", "status": "Exists" }
 { "phase": "UserObjects", "item": "MF_RULE",      "status": "Created" }
 ```

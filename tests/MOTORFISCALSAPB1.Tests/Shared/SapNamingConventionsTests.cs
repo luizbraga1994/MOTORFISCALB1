@@ -38,8 +38,8 @@ public class SapNamingConventionsTests
     }
 
     [Theory]
-    [InlineData("U_MF_CONSFINAL", "MF_CONSFINAL")]
-    [InlineData("MF_CONSFINAL", "MF_CONSFINAL")]
+    [InlineData("U_MF_TPCLIENTE", "MF_TPCLIENTE")]
+    [InlineData("MF_TPCLIENTE", "MF_TPCLIENTE")]
     [InlineData("u_algo", "algo")]
     public void NormalizeFieldAlias_remove_prefixo_U(string input, string expected)
     {
@@ -49,7 +49,7 @@ public class SapNamingConventionsTests
     [Fact]
     public void PhysicalColumnName_sempre_tem_U_prefix()
     {
-        SapNamingConventions.PhysicalColumnName("MF_CONSFINAL").Should().Be("U_MF_CONSFINAL");
-        SapNamingConventions.PhysicalColumnName("U_MF_CONSFINAL").Should().Be("U_MF_CONSFINAL");
+        SapNamingConventions.PhysicalColumnName("MF_TPCLIENTE").Should().Be("U_MF_TPCLIENTE");
+        SapNamingConventions.PhysicalColumnName("U_MF_TPCLIENTE").Should().Be("U_MF_TPCLIENTE");
     }
 }

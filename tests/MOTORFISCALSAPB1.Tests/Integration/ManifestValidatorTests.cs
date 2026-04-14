@@ -20,7 +20,7 @@ public class ManifestValidatorTests
             },
             UserFields = new()
             {
-                new() { Table = "OCRD", Name = "MF_CONSFINAL", Description = "Consumidor Final",
+                new() { Table = "OCRD", Name = "MF_TPCLIENTE", Description = "Tipo Cliente",
                     FieldType = "db_Alpha", SubType = "st_None", Size = 1 }
             }
         };
@@ -34,8 +34,8 @@ public class ManifestValidatorTests
         {
             UserFields = new()
             {
-                new() { Table = "OCRD", Name = "MF_CONSFINAL", Description = "x", FieldType = "db_Alpha", SubType = "st_None" },
-                new() { Table = "OCRD", Name = "MF_CONSFINAL", Description = "y", FieldType = "db_Alpha", SubType = "st_None" },
+                new() { Table = "OCRD", Name = "MF_TPCLIENTE", Description = "x", FieldType = "db_Alpha", SubType = "st_None" },
+                new() { Table = "OCRD", Name = "MF_TPCLIENTE", Description = "y", FieldType = "db_Alpha", SubType = "st_None" },
             }
         };
         _v.Validate(m).IsValid.Should().BeFalse();

@@ -16,4 +16,11 @@ public class FiscalResolutionRequest
     public decimal? ValorUnitario { get; set; }
     public string? Observacao { get; set; }
     public string? CorrelationId { get; set; }
+
+    /// <summary>
+    /// Indicador de consumidor final. Vem do campo <c>IndFinal</c> do header
+    /// do documento de marketing (OINV, ODLN, ORIN, ORDR, OPCH, OPOR, ...)
+    /// na localizacao BR do SAP B1. Eh atributo POR TRANSACAO, nao por BP.
+    /// </summary>
+    public bool ConsumidorFinal { get; set; }
 }

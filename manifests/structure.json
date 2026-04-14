@@ -42,19 +42,6 @@
   "userFields": [
     {
       "table": "OCRD",
-      "name": "MF_CONSFINAL",
-      "description": "Consumidor final (Y/N)",
-      "fieldType": "db_Alpha",
-      "subType": "st_None",
-      "size": 1,
-      "defaultValue": "N",
-      "validValues": [
-        { "value": "Y", "description": "Sim" },
-        { "value": "N", "description": "Nao" }
-      ]
-    },
-    {
-      "table": "OCRD",
       "name": "MF_TPCLIENTE",
       "description": "Tipo de cliente",
       "fieldType": "db_Numeric",

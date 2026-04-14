@@ -11,7 +11,7 @@ Layer.
   referenciado com aspas: `"SBO_COMP"."@MF_RULE"`.
 - UDTs: nome físico começa com `@` no HANA (`"@MF_RULE"`) mas sem `@` em
   Service Layer.
-- UDFs: coluna física sempre com prefixo `U_` (`"U_MF_CONSFINAL"`); Alias em
+- UDFs: coluna física sempre com prefixo `U_` (`"U_MF_TPCLIENTE"`); Alias em
   Service Layer é **sem** `U_`.
 - Todas as leituras parametrizadas via Dapper (prevenção de SQL injection).
 
@@ -23,7 +23,6 @@ SELECT
     c."CardName",
     c."CardType",
     c."LicTradNum",
-    c."U_MF_CONSFINAL",
     c."U_MF_TPCLIENTE",
     a."Address",
     a."AdresType",
@@ -71,7 +70,7 @@ WHERE i."ItemCode" = :itemCode
 Regra de normalização:
 
 - Para UDT: `TableID = '@MF_RULE'`, `AliasID = 'DESC'` (sem `U_`).
-- Para tabela padrão: `TableID = 'OCRD'`, `AliasID = 'MF_CONSFINAL'` (sem `U_`).
+- Para tabela padrão: `TableID = 'OCRD'`, `AliasID = 'MF_TPCLIENTE'` (sem `U_`).
 
 ```sql
 SELECT COUNT(1)
