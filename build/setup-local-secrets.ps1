@@ -5,14 +5,14 @@
 
 .DESCRIPTION
     Gera os arquivos idempotentemente. Se o arquivo ja existir, PULA
-    (nao sobrescreve — assim suas senhas editadas nao sao perdidas).
+    (nao sobrescreve -- assim suas senhas editadas nao sao perdidas).
 
     Duas modalidades:
 
-    1. Default (sem -InstallPath) — cria em src\MOTORFISCALSAPB1.*\ para
+    1. Default (sem -InstallPath) -- cria em src\MOTORFISCALSAPB1.*\ para
        debug local via dotnet run / F5 no Visual Studio.
 
-    2. Com -InstallPath — cria em <path>\Api\ e <path>\Worker\ para o
+    2. Com -InstallPath -- cria em <path>\Api\ e <path>\Worker\ para o
        servidor de producao (ex: -InstallPath C:\MFSAP).
 
     Os valores de Development vem pre-preenchidos com o ambiente de
@@ -28,15 +28,15 @@
     Sobrescreve arquivos existentes. CUIDADO: vai zerar senhas editadas.
 
 .EXAMPLE
-    pwsh .\build\setup-local-secrets.ps1
-    # Debug local — cria em src\*\
+    powershell -File .\build\setup-local-secrets.ps1
+    # Debug local -- cria em src\*\
 
 .EXAMPLE
-    pwsh .\build\setup-local-secrets.ps1 -InstallPath C:\MFSAP
-    # Servidor — cria em C:\MFSAP\Api\ e C:\MFSAP\Worker\
+    powershell -File .\build\setup-local-secrets.ps1 -InstallPath C:\MFSAP
+    # Servidor -- cria em C:\MFSAP\Api\ e C:\MFSAP\Worker\
 
 .EXAMPLE
-    pwsh .\build\setup-local-secrets.ps1 -Force
+    powershell -File .\build\setup-local-secrets.ps1 -Force
     # Recria tudo do zero.
 #>
 [CmdletBinding()]
@@ -51,7 +51,7 @@ $ErrorActionPreference = 'Stop'
 
 $apiDevelopment = @'
 {
-  "//": "appsettings.Development.json — GITIGNORED. Nao commitar.",
+  "//": "appsettings.Development.json -- GITIGNORED. Nao commitar.",
   "//2": "Ativo automaticamente quando ASPNETCORE_ENVIRONMENT=Development (default em dotnet run / F5).",
 
   "Logging": {
@@ -101,9 +101,9 @@ $apiDevelopment = @'
 
 $apiProduction = @'
 {
-  "//": "appsettings.Production.json — GITIGNORED. Preencher no servidor de producao.",
+  "//": "appsettings.Production.json -- GITIGNORED. Preencher no servidor de producao.",
   "//2": "Ativo quando ASPNETCORE_ENVIRONMENT=Production (default quando nada esta setado).",
-  "//3": "Mescla com appsettings.json — aqui so' vai o que difere (credenciais, hosts).",
+  "//3": "Mescla com appsettings.json -- aqui so vai o que difere (credenciais, hosts).",
 
   "Serilog": {
     "MinimumLevel": "Information",
@@ -141,7 +141,7 @@ $apiProduction = @'
 
 $workerDevelopment = @'
 {
-  "//": "appsettings.Development.json — GITIGNORED. Nao commitar.",
+  "//": "appsettings.Development.json -- GITIGNORED. Nao commitar.",
   "//2": "Ativo automaticamente quando DOTNET_ENVIRONMENT=Development.",
 
   "Logging": {
@@ -189,9 +189,9 @@ $workerDevelopment = @'
 
 $workerProduction = @'
 {
-  "//": "appsettings.Production.json — GITIGNORED. Preencher no servidor de producao.",
+  "//": "appsettings.Production.json -- GITIGNORED. Preencher no servidor de producao.",
   "//2": "Ativo quando DOTNET_ENVIRONMENT=Production (default quando nada esta setado).",
-  "//3": "Mescla com appsettings.json — aqui so' vai o que difere (credenciais, hosts).",
+  "//3": "Mescla com appsettings.json -- aqui so vai o que difere (credenciais, hosts).",
 
   "Serilog": {
     "MinimumLevel": "Information",
@@ -236,11 +236,11 @@ if ([string]::IsNullOrWhiteSpace($InstallPath)) {
     $repoRoot = Split-Path -Parent $PSScriptRoot
     $apiDir    = Join-Path $repoRoot 'src\MOTORFISCALSAPB1.Api'
     $workerDir = Join-Path $repoRoot 'src\MOTORFISCALSAPB1.Worker'
-    Write-Host "Modo DEV LOCAL — destinos:" -ForegroundColor Cyan
+    Write-Host "Modo DEV LOCAL -- destinos:" -ForegroundColor Cyan
 } else {
     $apiDir    = Join-Path $InstallPath 'Api'
     $workerDir = Join-Path $InstallPath 'Worker'
-    Write-Host "Modo SERVIDOR — destinos:" -ForegroundColor Cyan
+    Write-Host "Modo SERVIDOR -- destinos:" -ForegroundColor Cyan
 }
 
 Write-Host "  API   : $apiDir"
@@ -261,7 +261,7 @@ function Write-ConfigFile {
     }
 
     if ((Test-Path $Path) -and -not $Force) {
-        Write-Host "  [SKIP] $Label ja existe — preservado." -ForegroundColor Yellow
+        Write-Host "  [SKIP] $Label ja existe -- preservado." -ForegroundColor Yellow
         Write-Host "         $Path"
         return
     }
