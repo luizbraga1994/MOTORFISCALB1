@@ -32,7 +32,8 @@ namespace MOTORFISCALSAPB1.Addon
             try
             {
                 _sapApp = ConnectToSap(connectionString);
-                log.Information("Addon conectado ao SAP B1. CompanyDB={Db}", _sapApp.Company.CompanyDB);
+                // UI API expoe DatabaseName (nao CompanyDB, que e do DI API).
+                log.Information("Addon conectado ao SAP B1. CompanyDB={Db}", _sapApp.Company.DatabaseName);
 
                 var apiClient = new FiscalApiClient(settings, log);
                 _handler = new DocumentEventHandler(_sapApp, apiClient, settings, log);
