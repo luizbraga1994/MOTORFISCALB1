@@ -9,6 +9,8 @@ Os três componentes do motor são empacotados separadamente:
 | `MOTORFISCALSAPB1.Worker` | .NET 8 | **Windows Service** |
 
 Este guia cobre API e Worker. Para o Addon, ver [`Addon.md`](Addon.md).
+Para o **runbook** com checklist passo-a-passo, smoke test e rollback,
+ver [`Deployment-Checklist.md`](Deployment-Checklist.md).
 
 ## Pré-requisitos no servidor
 
