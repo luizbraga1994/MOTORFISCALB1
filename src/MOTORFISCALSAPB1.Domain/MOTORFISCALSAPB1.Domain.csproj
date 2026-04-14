@@ -3,4 +3,7 @@
     <RootNamespace>MOTORFISCALSAPB1.Domain</RootNamespace>
     <AssemblyName>MOTORFISCALSAPB1.Domain</AssemblyName>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MOTORFISCALSAPB1.Shared\MOTORFISCALSAPB1.Shared.csproj" />
+  </ItemGroup>
 </Project>
