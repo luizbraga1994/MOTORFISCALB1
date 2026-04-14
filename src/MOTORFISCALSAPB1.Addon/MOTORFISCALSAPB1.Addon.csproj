@@ -36,12 +36,34 @@
          e x64; o binding pro COM acontece em runtime. -->
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <COMReference Include="SAPbobsCOM">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>10</VersionMajor>
+      <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30100</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </COMReference>
+    <COMReference Include="SAPbouiCOM">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>10</VersionMajor>
+      <Guid>6048236a-956d-498d-a6f1-9c81c13ab6e8</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Serilog" Version="4.3.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <!-- ConfigurationManager / App.config no .NET 10 precisa do pacote
          (no .NET Framework vinha built-in). -->
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MOTORFISCALSAPB1.Shared\MOTORFISCALSAPB1.Shared.csproj" />
