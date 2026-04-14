@@ -6,6 +6,7 @@ using MOTORFISCALSAPB1.Addon.Services;
 using MOTORFISCALSAPB1.Shared.Contracts;
 using MOTORFISCALSAPB1.Shared.Enums;
 using SAPbouiCOM;
+using SapApp = SAPbouiCOM.Application;
 using Serilog;
 
 namespace MOTORFISCALSAPB1.Addon
@@ -19,7 +20,7 @@ namespace MOTORFISCALSAPB1.Addon
     /// </summary>
     public sealed class DocumentEventHandler
     {
-        private readonly Application _app;
+        private readonly SapApp _app;
         private readonly FiscalApiClient _api;
         private readonly Debouncer _debouncer;
         private readonly ILogger _log;
@@ -32,7 +33,7 @@ namespace MOTORFISCALSAPB1.Addon
             "18", "143", "142000002", "540", "540000140"
         };
 
-        public DocumentEventHandler(Application app, FiscalApiClient api, AddonSettings settings, ILogger log)
+        public DocumentEventHandler(SapApp app, FiscalApiClient api, AddonSettings settings, ILogger log)
         {
             _app = app;
             _api = api;

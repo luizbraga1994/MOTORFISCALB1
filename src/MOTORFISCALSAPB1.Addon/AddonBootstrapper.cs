@@ -3,6 +3,11 @@ using System.IO;
 using MOTORFISCALSAPB1.Addon.Configuration;
 using MOTORFISCALSAPB1.Addon.Services;
 using SAPbouiCOM;
+// Alias resolve ambiguidade com System.Windows.Forms.Application
+// (implicito pelo UseWindowsForms=true). Em todo lugar onde era 'Application'
+// referindo-se ao SAP, agora usamos 'SapApp'.
+using SapApp = SAPbouiCOM.Application;
+using WinFormsApp = System.Windows.Forms.Application;
 using Serilog;
 
 namespace MOTORFISCALSAPB1.Addon
@@ -13,7 +18,7 @@ namespace MOTORFISCALSAPB1.Addon
     /// </summary>
     public sealed class AddonBootstrapper
     {
-        private Application _sapApp;
+        private SapApp _sapApp;
         private DocumentEventHandler _handler;
 
         public int Run(string connectionString)
@@ -36,7 +41,7 @@ namespace MOTORFISCALSAPB1.Addon
                 _sapApp.AppEvent += OnAppEvent;
 
                 // Bloqueia enquanto o SAP estiver ativo.
-                System.Windows.Forms.Application.Run();
+                WinFormsApp.Run();
                 return 0;
             }
             catch (Exception ex)
@@ -46,7 +51,7 @@ namespace MOTORFISCALSAPB1.Addon
             }
         }
 
-        private static Application ConnectToSap(string connectionString)
+        private static SapApp ConnectToSap(string connectionString)
         {
             var bo = new SboGuiApi();
             bo.Connect(connectionString ?? Environment.GetCommandLineArgs()[0]);
@@ -60,7 +65,7 @@ namespace MOTORFISCALSAPB1.Addon
                 || eventType == BoAppEventTypes.aet_ServerTerminition)
             {
                 _handler?.Detach();
-                System.Windows.Forms.Application.Exit();
+                WinFormsApp.Exit();
             }
         }
     }
