@@ -1,16 +1,22 @@
-# Debug do addon no Visual Studio 2022
+# Debug do addon no Visual Studio 2026 (ou 2022)
 
 Este guia cobre o workflow de debug **antes** de empacotar como Extension.
 Permite iterar (F5 + breakpoint) conectado ao SAP B1 Client real.
+
+> Testado no **Visual Studio Community 2026**. No VS 2022 17.12+ o fluxo é
+> idêntico; diferença apenas no nome das cargas de workload.
 
 ## Pré-requisitos
 
 1. **SAP B1 Client** instalado na mesma máquina (32-bit **ou** 64-bit —
    o bitness do client determina com qual plataforma você vai debugar).
-2. **.NET 10 SDK** (inclui o Desktop Runtime `win-x86` e `win-x64`).
-3. **Visual Studio 2022** com as cargas `.NET desktop development` e
-   `.NET Multi-platform App UI development` (para WinForms em .NET 10).
-4. **Executar o VS2022 como Administrador** (clique direito → Run as
+2. **.NET 10 SDK** — já vem embutido no VS 2026 (no VS 2022 17.12+
+   também, mas confirme em `dotnet --list-sdks`).
+3. **Visual Studio 2026 Community** (ou 2022 17.12+) com as cargas:
+   - `.NET desktop development`
+   - Opcional: `.NET Multi-platform App UI development` (para Hot
+     Reload completo de WinForms).
+4. **Executar o VS como Administrador** (clique direito → Run as
    Administrator). Requerido porque SAPbouiCOM é COM out-of-process.
 5. Build na plataforma **que bate com o bitness do SAP B1 Client**:
    - Client 32-bit → `Platform = x86`.
@@ -100,8 +106,9 @@ Pontos sugeridos para breakpoint:
 ## Troubleshooting
 
 **`SboGuiApi.Connect` lança `HRESULT 0x80004005`**
-→ VS não está como Admin, ou o bitness do build não bate com o SAP B1
-Client, ou o Client está em outra sessão Windows.
+→ VS não está como Admin (no VS 2026, o shield na barra superior indica
+modo Admin), ou o bitness do build não bate com o SAP B1 Client, ou o
+Client está em outra sessão Windows.
 
 **`COMException: Class not registered` (HRESULT `0x80040154`)**
 → **Mismatch de bitness**. Se o SAP B1 Client é 64-bit, use
@@ -126,7 +133,7 @@ e "Require source files to exactly match the original version".
 Com o VS anexado, você pode:
 
 - **Edit & Continue**: mudanças em métodos sem reiniciar o addon (em
-  .NET 10 funciona bem com Hot Reload no VS2022 para muitos casos).
+  .NET 10 funciona bem com Hot Reload no VS 2026/2022 para muitos casos).
 - **Stop (Shift+F5)** e **F5** para reiniciar — o SAP B1 Client continua
   aberto e preserva a sessão.
 - Log em tempo real em
