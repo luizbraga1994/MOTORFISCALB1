@@ -10,6 +10,7 @@ obj/
 # Build output
 artifacts/
 publish/
+dist/
 TestResults/
 
 # Rider

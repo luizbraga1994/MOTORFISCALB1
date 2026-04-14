@@ -1,16 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <!--
+      Addon LightWeight SAP B1:
+      - Empacotamento via ZIP (sem MSI). O SAP B1 Server distribui o pacote
+        automaticamente para o client na primeira execucao, extraindo em
+        %LOCALAPPDATA%\SAP\SAP Business One\AddOns\MOTORFISCALSAPB1.
+      - O entrypoint (este .exe) e invocado pelo AddOn Launcher do SAP B1
+        passando a connection string como primeiro argumento.
+    -->
     <OutputType>Exe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>10</LangVersion>
     <Nullable>disable</Nullable>
-    <UseWindowsForms>false</UseWindowsForms>
+    <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x86</Platforms>
     <PlatformTarget>x86</PlatformTarget>
     <RootNamespace>MOTORFISCALSAPB1.Addon</RootNamespace>
     <AssemblyName>MOTORFISCALSAPB1.Addon</AssemblyName>
-    <!-- NOTE: Add references to SAPbouiCOM.dll and SAPbobsCOM.dll manually, -->
-    <!-- they are provided by the SAP Business One client installation. -->
+    <!-- Copia toda DLL de PackageReference para o output (requerido para
+         deployment LightWeight: o ZIP precisa ser auto-contido). -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <!-- NOTE: Adicione as referencias a SAPbouiCOM.dll e SAPbobsCOM.dll
+         manualmente apos clonar o repositorio. Elas vem da instalacao do
+         SAP Business One Client e nao podem ser redistribuidas via NuGet.
+         Marque Copy Local = False (o client do SAP ja possui as DLLs). -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
