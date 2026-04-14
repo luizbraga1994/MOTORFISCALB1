@@ -11,7 +11,7 @@ comando copiável e critério de sucesso.
 
 ---
 
-## Parte 1 — Debug local (VS2022 / F5)
+## Parte 1 — Debug local (VS 2026/2022 / F5)
 
 > Executar **uma única vez** na máquina de desenvolvimento.
 
@@ -48,7 +48,7 @@ $env:ASPNETCORE_ENVIRONMENT = "Development"
 dotnet run
 ```
 
-Ou, no VS2022: abrir `MOTORFISCALSAPB1.sln`, set `MOTORFISCALSAPB1.Api`
+Ou, no VS 2026/2022: abrir `MOTORFISCALSAPB1.sln`, set `MOTORFISCALSAPB1.Api`
 como startup project, **F5**.
 
 Critério: `curl http://localhost:5080/health` retorna `200 OK`.
@@ -63,11 +63,11 @@ dotnet run
 
 Critério: log mostra `Rule cache refreshed — N rules loaded`.
 
-### 1.4 Rodar Addon em Debug (VS2022)
+### 1.4 Rodar Addon em Debug (VS 2026/2022)
 
 Ver [`Debug.md`](Debug.md). Resumo:
 
-1. Abrir VS2022 **como Administrador**.
+1. Abrir VS 2026/2022 **como Administrador**.
 2. Set `MOTORFISCALSAPB1.Addon` como startup.
 3. Plataforma **x86**.
 4. F5.

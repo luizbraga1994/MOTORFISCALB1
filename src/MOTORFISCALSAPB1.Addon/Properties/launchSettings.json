@@ -5,7 +5,7 @@
       "commandLineArgs": "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056006900650077",
       "nativeDebugging": false,
       "workingDirectory": "$(ProjectDir)",
-      "_comment": "A commandLineArgs acima e a string hex UTF-16 de '0,0,SAPBDatev,PLomView' — conexao de desenvolvimento reconhecida pelo SboGuiApi do SAP B1 Client. Requer: (1) SAP B1 Client aberto e logado na company alvo; (2) Visual Studio 2022 executado como Administrador; (3) Platform do build (x86 ou x64) bate com o bitness do Client."
+      "_comment": "A commandLineArgs acima e a string hex UTF-16 de '0,0,SAPBDatev,PLomView' — conexao de desenvolvimento reconhecida pelo SboGuiApi do SAP B1 Client. Requer: (1) SAP B1 Client aberto e logado na company alvo; (2) Visual Studio 2026 ou 2022 executado como Administrador; (3) Platform do build (x86 ou x64) bate com o bitness do Client."
     },
     "MOTORFISCALSAPB1.Addon (Env Var)": {
       "commandName": "Project",
