@@ -14,7 +14,8 @@ configuráveis.
 - [FiscalEngine.md](FiscalEngine.md) — estratégia de regras e desempate.
 - [Signature.md](Signature.md) — assinatura fiscal, hash e criação
   idempotente de TaxCode.
-- [Addon.md](Addon.md) — comportamento do addon SAP B1 (UI API).
+- [Addon.md](Addon.md) — comportamento do addon SAP B1 (UI API) e empacotamento LightWeight.
+- [Debug.md](Debug.md) — workflow de debug no Visual Studio 2022 com SAP B1 Client.
 
 ## Regras inegociáveis
 
