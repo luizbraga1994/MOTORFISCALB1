@@ -34,9 +34,15 @@ public static class DependencyInjection
                 }
                 return handler;
             })
-            .AddPolicyHandler(HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .WaitAndRetryAsync(3, retry => TimeSpan.FromMilliseconds(300 * Math.Pow(2, retry))));
+            .AddPolicyHandler((sp, _) =>
+            {
+                var opts = sp.GetRequiredService<IOptions<ServiceLayerOptions>>().Value;
+                return HttpPolicyExtensions
+                    .HandleTransientHttpError()
+                    .WaitAndRetryAsync(
+                        opts.MaxRetryAttempts,
+                        retry => TimeSpan.FromMilliseconds(300 * Math.Pow(2, retry)));
+            });
 
         services.AddSingleton<IManifestValidator, ManifestValidator>();
         services.AddScoped<IUserTablesMdService, UserTablesMdService>();

@@ -31,11 +31,11 @@ public sealed class ServiceLayerClient : IServiceLayerClient, IDisposable
 
         if (string.IsNullOrWhiteSpace(_options.BaseUrl))
         {
-            throw new InvalidOperationException("ServiceLayer:BaseUrl não configurado.");
+            throw new InvalidOperationException("SapServiceLayer:BaseUrl nao configurado.");
         }
 
-        _http.BaseAddress = new Uri(_options.BaseUrl.TrimEnd('/') + "/");
-        _http.Timeout = TimeSpan.FromSeconds(_options.HttpTimeoutSeconds);
+        _http.BaseAddress = new Uri(_options.BuildApiBaseUrl());
+        _http.Timeout = TimeSpan.FromSeconds(_options.TimeoutSeconds);
         _http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
@@ -120,9 +120,10 @@ public sealed class ServiceLayerClient : IServiceLayerClient, IDisposable
             using var request = new HttpRequestMessage(HttpMethod.Post, "Login");
             request.Content = JsonContent.Create(new
             {
-                CompanyDB = _options.CompanyDb,
-                UserName = _options.UserName,
-                Password = _options.Password
+                CompanyDB = _options.CompanyDB,
+                UserName  = _options.UserName,
+                Password  = _options.Password,
+                Language  = _options.Language
             }, options: JsonOpts);
 
             using var response = await _http.SendAsync(request, ct).ConfigureAwait(false);

@@ -8,24 +8,27 @@ namespace MOTORFISCALSAPB1.Infrastructure.Persistence;
 public sealed class HanaConnectionFactory : IHanaConnectionFactory
 {
     private readonly HanaOptions _options;
+    private readonly string _connectionString;
 
     public HanaConnectionFactory(IOptions<HanaOptions> options)
     {
         _options = options.Value;
-        if (string.IsNullOrWhiteSpace(_options.ConnectionString))
-        {
-            throw new InvalidOperationException("Hana:ConnectionString não configurado.");
-        }
+        if (string.IsNullOrWhiteSpace(_options.Server))
+            throw new InvalidOperationException("HanaDbConnection:Server nao configurado.");
+        if (string.IsNullOrWhiteSpace(_options.Database))
+            throw new InvalidOperationException("HanaDbConnection:Database nao configurado.");
+        if (string.IsNullOrWhiteSpace(_options.UserID))
+            throw new InvalidOperationException("HanaDbConnection:UserID nao configurado.");
 
-        if (string.IsNullOrWhiteSpace(_options.Schema))
-        {
-            throw new InvalidOperationException("Hana:Schema não configurado.");
-        }
-
-        QuotedSchema = $"\"{_options.Schema}\"";
+        _connectionString = _options.BuildConnectionString();
+        QuotedSchema = $"\"{_options.Database}\"";
     }
 
+    /// <summary>Schema da company, ja entre aspas, para uso em SQL.</summary>
     public string QuotedSchema { get; }
 
-    public IDbConnection Create() => new HanaConnection(_options.ConnectionString);
+    /// <summary>Command timeout (segundos) a ser aplicado por Dapper.</summary>
+    public int CommandTimeoutSeconds => _options.CommandTimeout;
+
+    public IDbConnection Create() => new HanaConnection(_connectionString);
 }
