@@ -23,4 +23,12 @@
     <ProjectReference Include="..\MOTORFISCALSAPB1.Integration.SapB1\MOTORFISCALSAPB1.Integration.SapB1.csproj" />
     <ProjectReference Include="..\MOTORFISCALSAPB1.Shared\MOTORFISCALSAPB1.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Copia o manifesto de estrutura para o output do build. O endpoint
+         /api/structure/install resolve o path via Structure:ManifestPath
+         (default "manifests/structure.json") a partir do ContentRoot. -->
+    <None Include="..\..\manifests\structure.json" Link="manifests\structure.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
