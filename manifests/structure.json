@@ -10,13 +10,13 @@
     },
     {
       "name": "MF_RULE_RES",
-      "description": "Resultado fiscal das regras (linhas)",
+      "description": "Resultado das regras (linhas)",
       "tableType": "bott_MasterDataLines",
       "archivable": false
     },
     {
       "name": "MF_TAXMAP",
-      "description": "Mapa assinatura fiscal -> TaxCode SAP",
+      "description": "Assinatura -> TaxCode SAP",
       "tableType": "bott_NoObject",
       "archivable": false
     },
@@ -24,17 +24,17 @@
       "name": "MF_LOG",
       "description": "Log de auditoria fiscal",
       "tableType": "bott_NoObject",
-      "archivable": true
+      "archivable": false
     },
     {
       "name": "MF_LOCK",
-      "description": "Lock distribuido para criacao idempotente de TaxCode",
+      "description": "Lock distribuido TaxCode",
       "tableType": "bott_NoObject",
       "archivable": false
     },
     {
       "name": "MF_CFG",
-      "description": "Parametros de configuracao do motor fiscal",
+      "description": "Parametros de configuracao",
       "tableType": "bott_NoObject",
       "archivable": false
     }
@@ -56,7 +56,7 @@
     {
       "table": "OCRD",
       "name": "MF_TPCLIENTE",
-      "description": "Tipo de cliente (contribuinte ICMS, nao contribuinte, orgao publico, etc.)",
+      "description": "Tipo de cliente",
       "fieldType": "db_Numeric",
       "subType": "st_None",
       "size": 2,
@@ -88,7 +88,7 @@
     {
       "table": "OBPL",
       "name": "MF_ATIVIDADE",
-      "description": "CNAE / atividade principal da filial",
+      "description": "CNAE / atividade da filial",
       "fieldType": "db_Alpha",
       "subType": "st_None",
       "size": 20
@@ -96,7 +96,7 @@
     {
       "table": "OITM",
       "name": "MF_CEST",
-      "description": "Codigo CEST do item (Convenio ICMS 92/2015)",
+      "description": "Codigo CEST do item",
       "fieldType": "db_Alpha",
       "subType": "st_None",
       "size": 10
@@ -104,21 +104,21 @@
     {
       "table": "OITM",
       "name": "MF_ORIGEM",
-      "description": "Origem da mercadoria (0-8) conforme tabela A ICMS",
+      "description": "Origem da mercadoria (0-8)",
       "fieldType": "db_Numeric",
       "subType": "st_None",
       "size": 1,
       "defaultValue": "0",
       "validValues": [
         { "value": "0", "description": "Nacional" },
-        { "value": "1", "description": "Estrangeira - Importacao direta" },
-        { "value": "2", "description": "Estrangeira - Mercado interno" },
-        { "value": "3", "description": "Nacional com conteudo importado >40% e <=70%" },
-        { "value": "4", "description": "Nacional (PPB / Lei 8.248/91)" },
-        { "value": "5", "description": "Nacional com conteudo importado <=40%" },
-        { "value": "6", "description": "Estrangeira - Importacao direta sem similar nacional" },
-        { "value": "7", "description": "Estrangeira - Mercado interno sem similar nacional" },
-        { "value": "8", "description": "Nacional com conteudo importado >70%" }
+        { "value": "1", "description": "Estr. Importacao direta" },
+        { "value": "2", "description": "Estr. Mercado interno" },
+        { "value": "3", "description": "Nac. imp >40% <=70%" },
+        { "value": "4", "description": "Nac. PPB Lei 8.248/91" },
+        { "value": "5", "description": "Nac. imp <=40%" },
+        { "value": "6", "description": "Estr. Imp direta sem similar" },
+        { "value": "7", "description": "Estr. Merc int sem similar" },
+        { "value": "8", "description": "Nac. imp >70%" }
       ]
     },
 
@@ -160,7 +160,7 @@
     { "table": "@MF_RULE_RES", "name": "OBSERVACAO", "description": "Observacoes",                        "fieldType": "db_Memo",    "subType": "st_None" },
 
     { "table": "@MF_TAXMAP", "name": "TAXCODE",     "description": "TaxCode SAP criado",                  "fieldType": "db_Alpha",   "subType": "st_None", "size": 8, "mandatory": true },
-    { "table": "@MF_TAXMAP", "name": "CANONICAL",   "description": "Assinatura canonica (forma plana)",   "fieldType": "db_Memo",    "subType": "st_None" },
+    { "table": "@MF_TAXMAP", "name": "CANONICAL",   "description": "Assinatura canonica",                 "fieldType": "db_Memo",    "subType": "st_None" },
     { "table": "@MF_TAXMAP", "name": "CREATED_BY",  "description": "Usuario que criou",                   "fieldType": "db_Alpha",   "subType": "st_None", "size": 50 },
     { "table": "@MF_TAXMAP", "name": "CREATED_AT",  "description": "Data/hora de criacao",                "fieldType": "db_Date",    "subType": "st_None" },
 
@@ -170,7 +170,7 @@
     { "table": "@MF_LOG", "name": "BPLID",         "description": "BPLId do contexto",                    "fieldType": "db_Numeric", "subType": "st_None", "size": 11 },
     { "table": "@MF_LOG", "name": "ITEMCODE",      "description": "ItemCode do contexto",                 "fieldType": "db_Alpha",   "subType": "st_None", "size": 50 },
     { "table": "@MF_LOG", "name": "RULEID",        "description": "Regra aplicada",                       "fieldType": "db_Alpha",   "subType": "st_None", "size": 50 },
-    { "table": "@MF_LOG", "name": "SIGHASH",       "description": "Hash SHA-256 da assinatura fiscal",    "fieldType": "db_Alpha",   "subType": "st_None", "size": 64 },
+    { "table": "@MF_LOG", "name": "SIGHASH",       "description": "Hash SHA-256 da assinatura",           "fieldType": "db_Alpha",   "subType": "st_None", "size": 64 },
     { "table": "@MF_LOG", "name": "TAXCODE",       "description": "TaxCode resolvido",                    "fieldType": "db_Alpha",   "subType": "st_None", "size": 8 },
     { "table": "@MF_LOG", "name": "CREATED",       "description": "TaxCode criado nessa execucao",        "fieldType": "db_Alpha",   "subType": "st_None", "size": 1,
       "validValues": [ { "value": "Y", "description": "Sim" }, { "value": "N", "description": "Nao" } ] },
@@ -181,7 +181,7 @@
     { "table": "@MF_LOG", "name": "CREATEDAT",     "description": "Timestamp ISO 8601 do evento",         "fieldType": "db_Alpha",   "subType": "st_None", "size": 30 },
 
     { "table": "@MF_LOCK", "name": "OWNER",       "description": "Owner GUID detentor do lock",           "fieldType": "db_Alpha",   "subType": "st_None", "size": 64, "mandatory": true },
-    { "table": "@MF_LOCK", "name": "EXPIRES_AT",  "description": "Timestamp ISO de expiracao (TTL)",      "fieldType": "db_Alpha",   "subType": "st_None", "size": 30 },
+    { "table": "@MF_LOCK", "name": "EXPIRES_AT",  "description": "Timestamp ISO de expiracao",            "fieldType": "db_Alpha",   "subType": "st_None", "size": 30 },
     { "table": "@MF_LOCK", "name": "CREATED_AT",  "description": "Timestamp de criacao",                  "fieldType": "db_Alpha",   "subType": "st_None", "size": 30 },
 
     { "table": "@MF_CFG", "name": "KEY",   "description": "Chave de configuracao",                        "fieldType": "db_Alpha",   "subType": "st_None", "size": 100 },
