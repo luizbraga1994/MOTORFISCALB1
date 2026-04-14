@@ -43,7 +43,7 @@
     {
       "table": "OCRD",
       "name": "MF_CONSFINAL",
-      "description": "Parceiro consumidor final (Y/N)",
+      "description": "Consumidor final (Y/N)",
       "fieldType": "db_Alpha",
       "subType": "st_None",
       "size": 1,
