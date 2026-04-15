@@ -11,8 +11,11 @@ Layer.
   referenciado com aspas: `"SBO_COMP"."@MF_RULE"`.
 - UDTs: nome físico começa com `@` no HANA (`"@MF_RULE"`) mas sem `@` em
   Service Layer.
-- UDFs: coluna física sempre com prefixo `U_` (`"U_MF_TPCLIENTE"`); Alias em
+- UDFs: coluna física sempre com prefixo `U_` (`"U_MF_ATIVIDADE"`); Alias em
   Service Layer é **sem** `U_`.
+- **Preferir campos nativos da localização BR** quando existirem
+  (`OITM.ProductSrc`, `OITM.CESTCode`, `OBPL.ProfFax`, header `IndFinal`) —
+  UDFs só para o que não tem correspondente nativo.
 - Todas as leituras parametrizadas via Dapper (prevenção de SQL injection).
 
 ## Parceiro de negócios (OCRD + CRD1 + CRD7)
@@ -23,7 +26,6 @@ SELECT
     c."CardName",
     c."CardType",
     c."LicTradNum",
-    c."U_MF_TPCLIENTE",
     a."Address",
     a."AdresType",
     a."State",
@@ -44,22 +46,27 @@ WHERE c."CardCode" = :cardCode
 
 ## Filial (OBPL)
 
+`ProfFax` é o campo nativo da localização BR para regime tributário.
+
 ```sql
 SELECT
     "BPLId", "BPLName", "TaxIdNum", "State",
-    "U_MF_REGIME", "U_MF_ATIVIDADE"
+    "ProfFax", "U_MF_ATIVIDADE"
 FROM "SBO_COMP"."OBPL"
 WHERE "BPLId" = :bplId
 ```
 
 ## Item (OITM + ONCM)
 
+`CESTCode` e `ProductSrc` são campos nativos da localização BR (CEST e
+origem da mercadoria 0-8).
+
 ```sql
 SELECT
     i."ItemCode", i."ItemName",
     n."Code"   AS "NCMCode",
-    i."U_MF_CEST",
-    i."U_MF_ORIGEM"
+    i."CESTCode",
+    i."ProductSrc"
 FROM "SBO_COMP"."OITM" i
 LEFT JOIN "SBO_COMP"."ONCM" n ON n."AbsEntry" = i."NCMCode"
 WHERE i."ItemCode" = :itemCode
@@ -70,7 +77,7 @@ WHERE i."ItemCode" = :itemCode
 Regra de normalização:
 
 - Para UDT: `TableID = '@MF_RULE'`, `AliasID = 'DESC'` (sem `U_`).
-- Para tabela padrão: `TableID = 'OCRD'`, `AliasID = 'MF_TPCLIENTE'` (sem `U_`).
+- Para tabela padrão: `TableID = 'OBPL'`, `AliasID = 'MF_ATIVIDADE'` (sem `U_`).
 
 ```sql
 SELECT COUNT(1)

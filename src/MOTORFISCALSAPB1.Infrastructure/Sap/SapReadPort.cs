@@ -30,8 +30,7 @@ public sealed class SapReadPort : ISapReadPort
         // Viaja pelo FiscalResolutionRequest.ConsumidorFinal e nao pelo BP.
         const string sqlHeader = @"
 SELECT
-  ""CardCode"", ""CardName"", ""CardType"", ""LicTradNum"",
-  ""U_MF_TPCLIENTE"" AS ""TipoCliente""
+  ""CardCode"", ""CardName"", ""CardType"", ""LicTradNum""
 FROM {0}.""OCRD""
 WHERE ""CardCode"" = :cardCode";
 
@@ -85,13 +84,15 @@ ORDER BY ""Address"" ASC";
 
     public async Task<Branch?> GetBranchAsync(int bplId, CancellationToken ct)
     {
+        // Campos nativos BR: ProfFax = regime tributario (perfil fiscal).
+        // MF_ATIVIDADE (CNAE) permanece como UDF custom.
         const string sql = @"
 SELECT
   ""BPLId"", ""BPLName"", ""TaxIdNum"" AS ""Cnpj"",
   COALESCE(""AddrType"", '') AS ""AddrType"",
   COALESCE(""State"", '') AS ""Uf"",
   COALESCE(""City"", '') AS ""Cidade"",
-  COALESCE(""U_MF_REGIME"", '0') AS ""RegimeTributario"",
+  COALESCE(""ProfFax"", '0') AS ""RegimeTributario"",
   ""U_MF_ATIVIDADE"" AS ""Atividade""
 FROM {0}.""OBPL""
 WHERE ""BPLId"" = :bplId";
@@ -115,12 +116,13 @@ WHERE ""BPLId"" = :bplId";
 
     public async Task<Item?> GetItemAsync(string itemCode, CancellationToken ct)
     {
+        // Campos nativos BR: CESTCode (CEST) e ProductSrc (origem mercadoria 0-8).
         const string sql = @"
 SELECT
   ""ItemCode"", ""ItemName"",
   COALESCE(""NCMCode"", 0) AS ""NcmCode"",
-  COALESCE(""U_MF_CEST"", '') AS ""Cest"",
-  COALESCE(""U_MF_ORIGEM"", '0') AS ""Origem"",
+  COALESCE(""CESTCode"", '') AS ""Cest"",
+  COALESCE(""ProductSrc"", '0') AS ""Origem"",
   ""InvntItem"", ""SellItem"", ""PrchseItem""
 FROM {0}.""OITM""
 WHERE ""ItemCode"" = :itemCode";
@@ -203,7 +205,6 @@ WHERE ""TableID"" = :tableId AND ""AliasID"" = :aliasId";
         public string? CardName { get; set; }
         public string? CardType { get; set; }
         public string? LicTradNum { get; set; }
-        public string? TipoCliente { get; set; }
     }
 
     private sealed class AddressRow

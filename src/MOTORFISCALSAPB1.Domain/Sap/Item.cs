@@ -8,9 +8,9 @@ public class Item
     public string ItemCode { get; set; } = string.Empty;
     public string ItemName { get; set; } = string.Empty;
     public string Ncm { get; set; } = string.Empty;
-    /// <summary>CEST via UDF <c>U_MF_CEST</c>.</summary>
+    /// <summary>CEST via campo nativo BR <c>OITM.CESTCode</c>.</summary>
     public string Cest { get; set; } = string.Empty;
-    /// <summary>Origem da mercadoria (0..8) — UDF <c>U_MF_ORIGEM</c>.</summary>
+    /// <summary>Origem da mercadoria (0..8) — campo nativo BR <c>OITM.ProductSrc</c>.</summary>
     public int OrigemMercadoria { get; set; }
     public bool InventoryItem { get; set; }
     public bool SalesItem { get; set; }

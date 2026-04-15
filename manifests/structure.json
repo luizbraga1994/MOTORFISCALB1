@@ -41,72 +41,12 @@
   ],
   "userFields": [
     {
-      "table": "OCRD",
-      "name": "MF_TPCLIENTE",
-      "description": "Tipo de cliente",
-      "fieldType": "db_Numeric",
-      "subType": "st_None",
-      "size": 2,
-      "defaultValue": "1",
-      "validValues": [
-        { "value": "1", "description": "Contribuinte ICMS" },
-        { "value": "2", "description": "Nao contribuinte" },
-        { "value": "3", "description": "Isento / dispensado" },
-        { "value": "4", "description": "Orgao publico" },
-        { "value": "5", "description": "Produtor rural" },
-        { "value": "6", "description": "Pessoa fisica consumidor final" }
-      ]
-    },
-    {
-      "table": "OBPL",
-      "name": "MF_REGIME",
-      "description": "Regime tributario da filial",
-      "fieldType": "db_Numeric",
-      "subType": "st_None",
-      "size": 2,
-      "defaultValue": "2",
-      "validValues": [
-        { "value": "1", "description": "Simples Nacional" },
-        { "value": "2", "description": "Lucro Presumido" },
-        { "value": "3", "description": "Lucro Real" },
-        { "value": "4", "description": "MEI" }
-      ]
-    },
-    {
       "table": "OBPL",
       "name": "MF_ATIVIDADE",
       "description": "CNAE / atividade da filial",
       "fieldType": "db_Alpha",
       "subType": "st_None",
       "size": 20
-    },
-    {
-      "table": "OITM",
-      "name": "MF_CEST",
-      "description": "Codigo CEST do item",
-      "fieldType": "db_Alpha",
-      "subType": "st_None",
-      "size": 10
-    },
-    {
-      "table": "OITM",
-      "name": "MF_ORIGEM",
-      "description": "Origem da mercadoria (0-8)",
-      "fieldType": "db_Numeric",
-      "subType": "st_None",
-      "size": 1,
-      "defaultValue": "0",
-      "validValues": [
-        { "value": "0", "description": "Nacional" },
-        { "value": "1", "description": "Estr. Importacao direta" },
-        { "value": "2", "description": "Estr. Mercado interno" },
-        { "value": "3", "description": "Nac. imp >40% <=70%" },
-        { "value": "4", "description": "Nac. PPB Lei 8.248/91" },
-        { "value": "5", "description": "Nac. imp <=40%" },
-        { "value": "6", "description": "Estr. Imp direta sem similar" },
-        { "value": "7", "description": "Estr. Merc int sem similar" },
-        { "value": "8", "description": "Nac. imp >70%" }
-      ]
     },
 
     { "table": "@MF_RULE", "name": "DESCRICAO",       "description": "Descricao da regra",                "fieldType": "db_Alpha",   "subType": "st_None", "size": 200, "mandatory": true },
