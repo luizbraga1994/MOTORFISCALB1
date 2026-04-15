@@ -49,6 +49,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSapB1Integration(builder.Configuration);
 
 builder.Services.AddScoped<IValidator<MOTORFISCALSAPB1.Shared.Contracts.FiscalResolutionRequest>, FiscalResolutionRequestValidator>();
+builder.Services.AddScoped<IValidator<MOTORFISCALSAPB1.Shared.Contracts.TaxCodeEnsureRequest>, TaxCodeEnsureRequestValidator>();
+builder.Services.AddScoped<IValidator<MOTORFISCALSAPB1.Api.Endpoints.FiscalRuleDto>, FiscalRuleDtoValidator>();
 
 builder.Services.AddHealthChecks();
 
@@ -62,6 +64,9 @@ var app = builder.Build();
 app.UseSerilogRequestLogging();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+// Auth vem apos exception handling e correlation id para que erros 401 ja
+// tenham CorrelationId no header e sejam capturaveis no log de request.
+app.UseMiddleware<ApiKeyAuthenticationMiddleware>();
 app.UseCors();
 
 app.UseSwagger();

@@ -41,8 +41,14 @@ public static class FiscalEndpoints
             TaxCodeEnsureRequest req,
             IFiscalSignatureService signatureSvc,
             ITaxCodeEnsurer ensurer,
+            IValidator<TaxCodeEnsureRequest> validator,
+            HttpContext http,
             CancellationToken ct) =>
         {
+            await validator.ValidateAndThrowAsync(req, ct);
+            // CorrelationId ja esta em http.Items via middleware e propagado nos
+            // logs via Serilog.LogContext. Nao precisa injetar no payload aqui.
+
             var result = new Domain.Fiscal.FiscalResolutionResult
             {
                 Cfop = req.Cfop,

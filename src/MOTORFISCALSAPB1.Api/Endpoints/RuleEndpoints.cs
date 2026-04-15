@@ -1,4 +1,6 @@
+using FluentValidation;
 using MOTORFISCALSAPB1.Application.UseCases;
+using MOTORFISCALSAPB1.Domain.Common;
 using MOTORFISCALSAPB1.Domain.Fiscal;
 
 namespace MOTORFISCALSAPB1.Api.Endpoints;
@@ -17,12 +19,19 @@ public static class RuleEndpoints
 
         g.MapGet("/{id}", async (string id, IManageRuleUseCase uc, CancellationToken ct) =>
         {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new DomainException("Id obrigatorio.", "RULE_ID_REQUIRED");
             var rule = await uc.GetAsync(id, ct);
             return rule is null ? Results.NotFound() : Results.Ok(rule);
         }).WithName("GetRule");
 
-        g.MapPut("/", async (FiscalRuleDto dto, IManageRuleUseCase uc, CancellationToken ct) =>
+        g.MapPut("/", async (
+            FiscalRuleDto dto,
+            IManageRuleUseCase uc,
+            IValidator<FiscalRuleDto> validator,
+            CancellationToken ct) =>
         {
+            await validator.ValidateAndThrowAsync(dto, ct);
             var rule = dto.ToDomain();
             await uc.UpsertAsync(rule, ct);
             return Results.NoContent();
@@ -30,6 +39,8 @@ public static class RuleEndpoints
 
         g.MapDelete("/{id}", async (string id, IManageRuleUseCase uc, CancellationToken ct) =>
         {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new DomainException("Id obrigatorio.", "RULE_ID_REQUIRED");
             await uc.DeleteAsync(id, ct);
             return Results.NoContent();
         }).WithName("DeleteRule");

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using FluentValidation;
 using MOTORFISCALSAPB1.Domain.Common;
 using MOTORFISCALSAPB1.Integration.SapB1.ServiceLayer;
 
@@ -21,6 +22,19 @@ public sealed class ExceptionHandlingMiddleware
         try
         {
             await _next(ctx).ConfigureAwait(false);
+        }
+        catch (ValidationException ex)
+        {
+            // FluentValidation: agrega todos os erros em array estavel.
+            _logger.LogWarning("Validation error: {Errors}",
+                string.Join("; ", ex.Errors.Select(e => e.PropertyName + ": " + e.ErrorMessage)));
+            await WriteAsync(ctx, HttpStatusCode.BadRequest, new
+            {
+                error = "Requisicao invalida.",
+                code = "VALIDATION_ERROR",
+                details = ex.Errors.Select(e => new { field = e.PropertyName, message = e.ErrorMessage }),
+                correlationId = ctx.Response.Headers[CorrelationIdMiddleware.HeaderName].ToString()
+            });
         }
         catch (DomainException ex)
         {

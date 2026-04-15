@@ -85,7 +85,21 @@ public sealed class FiscalEngine : IFiscalEngine
             }
             catch (Exception auditEx)
             {
-                _logger.LogWarning(auditEx, "Falha ao registrar auditoria fiscal.");
+                // Auditoria e best-effort: falha nao pode mascarar nem abortar a
+                // operacao fiscal principal. Mas precisa ter contexto suficiente
+                // para forensic post-mortem (qual resolucao, qual hash, qual tax
+                // code nao ficou auditado). Log em Warning com campos estruturados.
+                _logger.LogWarning(auditEx,
+                    "Falha ao registrar auditoria fiscal. CorrelationId={CorrelationId} BP={BP} BPL={BPL} Item={Item} Rule={RuleId} Hash={Hash} TaxCode={TaxCode} Duration={DurationMs}ms OriginalError={OriginalError}",
+                    context.CorrelationId,
+                    context.CardCode,
+                    context.BplId,
+                    context.ItemCode,
+                    rule?.Id,
+                    signature?.Hash,
+                    outcome?.TaxCode,
+                    sw.ElapsedMilliseconds,
+                    error);
             }
         }
     }

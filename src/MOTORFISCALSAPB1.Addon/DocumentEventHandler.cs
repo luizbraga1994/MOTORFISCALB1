@@ -157,7 +157,7 @@ namespace MOTORFISCALSAPB1.Addon
             }
         }
 
-        private static string TryGetEditValue(IForm form, string itemUid)
+        private string TryGetEditValue(IForm form, string itemUid)
         {
             try
             {
@@ -165,30 +165,45 @@ namespace MOTORFISCALSAPB1.Addon
                 var edit = item.Specific as EditText;
                 return edit != null ? edit.Value : null;
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                // Log em Debug: frequencia alta (tentativa em varios UIDs); nao e erro real
+                // quando o item nao existe no tipo de documento. Mantem rastreabilidade
+                // em troubleshooting sem poluir log Info.
+                _log.Debug(ex, "Item '{ItemUid}' nao acessivel no form {Form}", itemUid, form?.UniqueID ?? "?");
+                return null;
+            }
         }
 
-        private static string TryGetMatrixValue(Matrix matrix, string colUid, int rowIndex)
+        private string TryGetMatrixValue(Matrix matrix, string colUid, int rowIndex)
         {
             try
             {
                 var cell = (EditText)matrix.Columns.Item(colUid).Cells.Item(rowIndex).Specific;
                 return cell.Value;
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                _log.Debug(ex, "Celula matrix col={Col} row={Row} nao acessivel", colUid, rowIndex);
+                return null;
+            }
         }
 
-        private static void SetMatrixValue(Matrix matrix, string colUid, int rowIndex, string value)
+        private void SetMatrixValue(Matrix matrix, string colUid, int rowIndex, string value)
         {
+            if (string.IsNullOrEmpty(value)) return;
             try
             {
-                if (string.IsNullOrEmpty(value)) return;
                 var cell = (EditText)matrix.Columns.Item(colUid).Cells.Item(rowIndex).Specific;
                 cell.Value = value;
             }
-            catch
+            catch (Exception ex)
             {
-                // coluna pode não existir em todos os documentos
+                // Coluna pode nao existir em documentos que nao usam TaxCode/CFOP/CST
+                // visiveis (ex.: Cotacoes sem flag fiscal). Log em Warning para sinalizar
+                // operador: se o documento esperava receber TaxCode, isto indica deploy
+                // com layout desatualizado ou campo removido manualmente.
+                _log.Warning(ex, "Nao foi possivel setar coluna {Col}={Value} na linha {Row}", colUid, value, rowIndex);
             }
         }
     }

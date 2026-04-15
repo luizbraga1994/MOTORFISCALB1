@@ -12,6 +12,7 @@ namespace MOTORFISCALSAPB1.Addon.Configuration
         public int HttpTimeoutSeconds { get; }
         public int DebounceMilliseconds { get; }
         public string LogPath { get; }
+        public string ApiKey { get; }
 
         public AddonSettings()
         {
@@ -19,6 +20,10 @@ namespace MOTORFISCALSAPB1.Addon.Configuration
             HttpTimeoutSeconds = ParseInt(ConfigurationManager.AppSettings["MF.HttpTimeoutSeconds"], 15);
             DebounceMilliseconds = ParseInt(ConfigurationManager.AppSettings["MF.DebounceMilliseconds"], 400);
             LogPath = ConfigurationManager.AppSettings["MF.LogPath"] ?? "logs\\addon-.log";
+            // Fallback para variavel de ambiente evita commitar API key em App.config.
+            ApiKey = ConfigurationManager.AppSettings["MF.ApiKey"]
+                     ?? Environment.GetEnvironmentVariable("MF_API_KEY")
+                     ?? string.Empty;
 
             if (!ApiBaseUrl.EndsWith("/", StringComparison.Ordinal))
             {

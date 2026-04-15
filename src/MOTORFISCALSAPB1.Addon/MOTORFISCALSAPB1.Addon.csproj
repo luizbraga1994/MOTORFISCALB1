@@ -58,7 +58,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <!-- Sem Newtonsoft.Json: Addon usa System.Text.Json (built-in no .NET 10),
+         consistente com a serializacao padrao da Api em ASP.NET Core. -->
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <!-- ConfigurationManager / App.config no .NET 10 precisa do pacote

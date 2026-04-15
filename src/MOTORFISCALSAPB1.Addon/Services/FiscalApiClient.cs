@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using MOTORFISCALSAPB1.Addon.Configuration;
 using MOTORFISCALSAPB1.Shared.Contracts;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace MOTORFISCALSAPB1.Addon.Services
@@ -17,6 +17,14 @@ namespace MOTORFISCALSAPB1.Addon.Services
     /// </summary>
     public sealed class FiscalApiClient
     {
+        // Opcoes compartilhadas: camelCase compativel com a serializacao padrao
+        // do ASP.NET Core, e ignora case na desserializacao para robustez.
+        private static readonly JsonSerializerOptions JsonOpts = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true
+        };
+
         private readonly AddonSettings _settings;
         private readonly ILogger _log;
 
@@ -33,12 +41,16 @@ namespace MOTORFISCALSAPB1.Addon.Services
             CancellationToken ct)
         {
             var url = _settings.ApiBaseUrl + "api/fiscal/resolve";
-            var payload = JsonConvert.SerializeObject(request);
+            var payload = JsonSerializer.Serialize(request, JsonOpts);
             var httpReq = (HttpWebRequest)WebRequest.Create(url);
             httpReq.Method = "POST";
             httpReq.ContentType = "application/json";
             httpReq.Accept = "application/json";
             httpReq.Headers["X-Correlation-Id"] = correlationId ?? Guid.NewGuid().ToString("N");
+            if (!string.IsNullOrEmpty(_settings.ApiKey))
+            {
+                httpReq.Headers["X-Api-Key"] = _settings.ApiKey;
+            }
             httpReq.Timeout = _settings.HttpTimeoutSeconds * 1000;
 
             using (var reqStream = await httpReq.GetRequestStreamAsync().ConfigureAwait(false))
@@ -53,7 +65,7 @@ namespace MOTORFISCALSAPB1.Addon.Services
                 using (var sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
                 {
                     var body = await sr.ReadToEndAsync().ConfigureAwait(false);
-                    return JsonConvert.DeserializeObject<FiscalResolutionResponse>(body);
+                    return JsonSerializer.Deserialize<FiscalResolutionResponse>(body, JsonOpts);
                 }
             }
             catch (WebException wex)

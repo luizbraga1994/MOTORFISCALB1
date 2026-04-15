@@ -28,15 +28,22 @@ public sealed class FiscalContextBuilder : IFiscalContextBuilder
         if (req.BplId <= 0)
             throw new DomainException("BPLId obrigatório.", "CTX_BPLID_REQUIRED");
 
+        // Paraleliza os 3 round-trips ao HANA. Aguarda WhenAll para capturar
+        // eventuais exceções em ordem previsível, e em seguida awaita cada
+        // task individualmente (o await de uma task ja concluida retorna
+        // sincronamente o valor — nao e blocking e propaga excecoes original).
         var bpTask = _sap.GetBusinessPartnerAsync(req.CardCode, ct);
         var branchTask = _sap.GetBranchAsync(req.BplId, ct);
         var itemTask = _sap.GetItemAsync(req.ItemCode, ct);
 
         await Task.WhenAll(bpTask, branchTask, itemTask).ConfigureAwait(false);
 
-        var bp = bpTask.Result ?? throw new DomainException($"BP {req.CardCode} não encontrado.", "CTX_BP_NOT_FOUND");
-        var branch = branchTask.Result ?? throw new DomainException($"Filial {req.BplId} não encontrada.", "CTX_BRANCH_NOT_FOUND");
-        var item = itemTask.Result ?? throw new DomainException($"Item {req.ItemCode} não encontrado.", "CTX_ITEM_NOT_FOUND");
+        var bp = await bpTask.ConfigureAwait(false)
+                 ?? throw new DomainException($"BP {req.CardCode} não encontrado.", "CTX_BP_NOT_FOUND");
+        var branch = await branchTask.ConfigureAwait(false)
+                 ?? throw new DomainException($"Filial {req.BplId} não encontrada.", "CTX_BRANCH_NOT_FOUND");
+        var item = await itemTask.ConfigureAwait(false)
+                 ?? throw new DomainException($"Item {req.ItemCode} não encontrado.", "CTX_ITEM_NOT_FOUND");
 
         var end = bp.EnderecoEntrega ?? bp.EnderecoCobranca;
 
