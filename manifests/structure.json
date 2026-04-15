@@ -40,15 +40,6 @@
     }
   ],
   "userFields": [
-    {
-      "table": "OBPL",
-      "name": "MF_ATIVIDADE",
-      "description": "CNAE / atividade da filial",
-      "fieldType": "db_Alpha",
-      "subType": "st_None",
-      "size": 20
-    },
-
     { "table": "@MF_RULE", "name": "DESCRICAO",       "description": "Descricao da regra",                "fieldType": "db_Alpha",   "subType": "st_None", "size": 200, "mandatory": true },
     { "table": "@MF_RULE", "name": "PRIORITY",        "description": "Prioridade (desempate)",            "fieldType": "db_Numeric", "subType": "st_None", "size": 6,   "defaultValue": "0" },
     { "table": "@MF_RULE", "name": "ACTIVE",          "description": "Regra ativa (Y/N)",                 "fieldType": "db_Alpha",   "subType": "st_None", "size": 1,   "defaultValue": "Y",

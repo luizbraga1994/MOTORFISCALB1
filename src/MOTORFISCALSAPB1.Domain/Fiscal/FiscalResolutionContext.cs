@@ -33,9 +33,6 @@ public class FiscalResolutionContext
     /// <summary>Regime tributário da filial emissora.</summary>
     public int RegimeTributarioFilial { get; set; }
 
-    /// <summary>Código da atividade da filial (UDF <c>U_MF_ATIVIDADE</c>).</summary>
-    public string? AtividadeFilial { get; set; }
-
     /// <summary>CorrelationId para rastreabilidade fim-a-fim.</summary>
     public string? CorrelationId { get; set; }
 

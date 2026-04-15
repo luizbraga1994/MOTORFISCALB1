@@ -31,11 +31,17 @@ finalidade. O manifesto autoritativo é `manifests/structure.json`.
 
 | Entidade | CUFD.TableID | SL POST TableName | SL POST Name | Coluna física HANA |
 |---|---|---|---|---|
-| UDF em tabela padrão (OBPL.U_MF_ATIVIDADE) | `OBPL` | `OBPL` | `MF_ATIVIDADE` | `U_MF_ATIVIDADE` |
 | UDF em UDT (@MF_RULE.U_DESCRICAO) | `@MF_RULE` | `MF_RULE` | `DESCRICAO` | `U_DESCRICAO` |
+| UDF em tabela padrão (exemplo — não usado hoje) | `OCRD` | `OCRD` | `MF_X` | `U_MF_X` |
+
+A estrutura atual **não cria UDFs em tabelas padrão** (`OCRD`, `OITM`,
+`OBPL`). Tudo o que o motor lê dessas tabelas vem de campos nativos da
+localização BR (`OITM.ProductSrc`, `OITM.NCMCode` → `ONCM`,
+`OITM.CESTCode` → `OCEST`, `OBPL.ProfFax`, header `IndFinal`).
 
 O helper `SapNamingConventions` (em `MOTORFISCALSAPB1.Shared.Helpers`) é a
-única fonte de verdade para essas transformações.
+única fonte de verdade para essas transformações, caso seja necessário
+adicionar UDFs em tabelas padrão no futuro.
 
 ## Exemplo de chamada
 
@@ -49,7 +55,7 @@ curl -X POST http://localhost:5080/api/structure/install \
 O hub SignalR emite mensagens:
 
 ```json
-{ "phase": "UserTables",  "item": "MF_RULE",      "status": "Created" }
-{ "phase": "UserFields",  "item": "OBPL.MF_ATIVIDADE", "status": "Exists" }
-{ "phase": "UserObjects", "item": "MF_RULE",      "status": "Created" }
+{ "phase": "UserTables",  "item": "MF_RULE",                "status": "Created" }
+{ "phase": "UserFields",  "item": "@MF_RULE.DESCRICAO",     "status": "Exists"  }
+{ "phase": "UserObjects", "item": "MF_RULE",                "status": "Created" }
 ```

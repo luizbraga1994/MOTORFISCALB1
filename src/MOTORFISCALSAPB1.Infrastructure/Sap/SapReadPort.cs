@@ -85,15 +85,13 @@ ORDER BY ""Address"" ASC";
     public async Task<Branch?> GetBranchAsync(int bplId, CancellationToken ct)
     {
         // Campos nativos BR: ProfFax = regime tributario (perfil fiscal).
-        // MF_ATIVIDADE (CNAE) permanece como UDF custom.
         const string sql = @"
 SELECT
   ""BPLId"", ""BPLName"", ""TaxIdNum"" AS ""Cnpj"",
   COALESCE(""AddrType"", '') AS ""AddrType"",
   COALESCE(""State"", '') AS ""Uf"",
   COALESCE(""City"", '') AS ""Cidade"",
-  COALESCE(""ProfFax"", '0') AS ""RegimeTributario"",
-  ""U_MF_ATIVIDADE"" AS ""Atividade""
+  COALESCE(""ProfFax"", '0') AS ""RegimeTributario""
 FROM {0}.""OBPL""
 WHERE ""BPLId"" = :bplId";
 
@@ -110,7 +108,6 @@ WHERE ""BPLId"" = :bplId";
             Uf = row.Uf ?? string.Empty,
             Cidade = row.Cidade ?? string.Empty,
             RegimeTributario = int.TryParse(row.RegimeTributario, out var rt) ? rt : 0,
-            Atividade = row.Atividade
         };
     }
 
@@ -235,7 +232,6 @@ WHERE ""TableID"" = :tableId AND ""AliasID"" = :aliasId";
         public string? Uf { get; set; }
         public string? Cidade { get; set; }
         public string? RegimeTributario { get; set; }
-        public string? Atividade { get; set; }
     }
 
     private sealed class ItemRow

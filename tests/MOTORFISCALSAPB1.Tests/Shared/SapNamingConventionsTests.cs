@@ -38,8 +38,8 @@ public class SapNamingConventionsTests
     }
 
     [Theory]
-    [InlineData("U_MF_ATIVIDADE", "MF_ATIVIDADE")]
-    [InlineData("MF_ATIVIDADE", "MF_ATIVIDADE")]
+    [InlineData("U_DESCRICAO", "DESCRICAO")]
+    [InlineData("DESCRICAO", "DESCRICAO")]
     [InlineData("u_algo", "algo")]
     public void NormalizeFieldAlias_remove_prefixo_U(string input, string expected)
     {
@@ -49,7 +49,7 @@ public class SapNamingConventionsTests
     [Fact]
     public void PhysicalColumnName_sempre_tem_U_prefix()
     {
-        SapNamingConventions.PhysicalColumnName("MF_ATIVIDADE").Should().Be("U_MF_ATIVIDADE");
-        SapNamingConventions.PhysicalColumnName("U_MF_ATIVIDADE").Should().Be("U_MF_ATIVIDADE");
+        SapNamingConventions.PhysicalColumnName("DESCRICAO").Should().Be("U_DESCRICAO");
+        SapNamingConventions.PhysicalColumnName("U_DESCRICAO").Should().Be("U_DESCRICAO");
     }
 }

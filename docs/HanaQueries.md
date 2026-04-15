@@ -11,11 +11,13 @@ Layer.
   referenciado com aspas: `"SBO_COMP"."@MF_RULE"`.
 - UDTs: nome físico começa com `@` no HANA (`"@MF_RULE"`) mas sem `@` em
   Service Layer.
-- UDFs: coluna física sempre com prefixo `U_` (`"U_MF_ATIVIDADE"`); Alias em
-  Service Layer é **sem** `U_`.
-- **Preferir campos nativos da localização BR** quando existirem
-  (`OITM.ProductSrc`, `OITM.CESTCode`, `OBPL.ProfFax`, header `IndFinal`) —
-  UDFs só para o que não tem correspondente nativo.
+- UDFs em UDTs próprias (ex.: `"@MF_RULE"."U_DESCRICAO"`) seguem o padrão
+  SAP: coluna física com prefixo `U_`, Alias em Service Layer **sem** `U_`.
+- **Preferir campos nativos da localização BR** em vez de UDF em tabela
+  padrão — a estrutura atual não cria UDFs em `OCRD`, `OITM` ou `OBPL`.
+  Tudo o que o motor precisa vem de: `OITM.ProductSrc`, `OITM.NCMCode`
+  (→`ONCM`), `OITM.CESTCode` (→`OCEST`), `OBPL.ProfFax`, e do campo
+  `IndFinal` no header dos documentos de marketing.
 - Todas as leituras parametrizadas via Dapper (prevenção de SQL injection).
 
 ## Parceiro de negócios (OCRD + CRD1 + CRD7)
@@ -51,7 +53,7 @@ WHERE c."CardCode" = :cardCode
 ```sql
 SELECT
     "BPLId", "BPLName", "TaxIdNum", "State",
-    "ProfFax", "U_MF_ATIVIDADE"
+    "ProfFax"
 FROM "SBO_COMP"."OBPL"
 WHERE "BPLId" = :bplId
 ```
@@ -84,8 +86,10 @@ WHERE i."ItemCode" = :itemCode
 
 Regra de normalização:
 
-- Para UDT: `TableID = '@MF_RULE'`, `AliasID = 'DESC'` (sem `U_`).
-- Para tabela padrão: `TableID = 'OBPL'`, `AliasID = 'MF_ATIVIDADE'` (sem `U_`).
+- Para UDT: `TableID = '@MF_RULE'`, `AliasID = 'DESCRICAO'` (sem `U_`).
+- A estrutura atual não cria UDFs em tabelas padrão; o padrão continua
+  valendo caso seja necessário no futuro: `TableID = 'OCRD'`, `AliasID`
+  sem o prefixo `U_`.
 
 ```sql
 SELECT COUNT(1)

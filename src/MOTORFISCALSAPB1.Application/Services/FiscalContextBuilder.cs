@@ -54,7 +54,6 @@ public sealed class FiscalContextBuilder : IFiscalContextBuilder
             BplId = branch.BplId,
             UfOrigem = branch.Uf,
             RegimeTributarioFilial = branch.RegimeTributario,
-            AtividadeFilial = branch.Atividade,
             ItemCode = item.ItemCode,
             Ncm = item.Ncm,
             Cest = item.Cest,

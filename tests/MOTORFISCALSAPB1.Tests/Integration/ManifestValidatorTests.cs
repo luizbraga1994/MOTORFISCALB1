@@ -20,8 +20,8 @@ public class ManifestValidatorTests
             },
             UserFields = new()
             {
-                new() { Table = "OBPL", Name = "MF_ATIVIDADE", Description = "CNAE",
-                    FieldType = "db_Alpha", SubType = "st_None", Size = 20 }
+                new() { Table = "@MF_RULE", Name = "DESCRICAO", Description = "Descricao",
+                    FieldType = "db_Alpha", SubType = "st_None", Size = 200, Mandatory = true }
             }
         };
         _v.Validate(m).IsValid.Should().BeTrue();
@@ -34,8 +34,8 @@ public class ManifestValidatorTests
         {
             UserFields = new()
             {
-                new() { Table = "OBPL", Name = "MF_ATIVIDADE", Description = "x", FieldType = "db_Alpha", SubType = "st_None" },
-                new() { Table = "OBPL", Name = "MF_ATIVIDADE", Description = "y", FieldType = "db_Alpha", SubType = "st_None" },
+                new() { Table = "@MF_RULE", Name = "DESCRICAO", Description = "x", FieldType = "db_Alpha", SubType = "st_None" },
+                new() { Table = "@MF_RULE", Name = "DESCRICAO", Description = "y", FieldType = "db_Alpha", SubType = "st_None" },
             }
         };
         _v.Validate(m).IsValid.Should().BeFalse();

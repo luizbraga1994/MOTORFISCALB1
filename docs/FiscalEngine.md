@@ -7,9 +7,10 @@ específica e retornar um `FiscalResolutionResult` determinístico.
 
 `FiscalResolutionContext` agrega, em um único objeto forte:
 
-- Parceiro: `CardCode`, `CardType`, UF, município, CNPJ/CPF, contribuinte ICMS,
-  consumidor final, tipo de cliente.
-- Filial: `BPLId`, UF, regime tributário, atividade.
+- Parceiro: `CardCode`, `CardType`, UF, município, CNPJ/CPF, contribuinte ICMS.
+- Transação: `ConsumidorFinal` (vem do `IndFinal` do header do documento
+  de marketing, não do BP).
+- Filial: `BPLId`, UF, regime tributário (`OBPL.ProfFax`).
 - Item: `ItemCode`, `NCM`, `CEST`, `Origem`.
 - Operação: `TipoOperacao` (enum), `Quantidade`, `ValorUnitario`.
 - Derivado: `IsOperacaoInterestadual()` (UF filial ≠ UF parceiro).

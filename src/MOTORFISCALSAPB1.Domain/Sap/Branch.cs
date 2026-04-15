@@ -13,6 +13,4 @@ public class Branch
     public string Cidade { get; set; } = string.Empty;
     /// <summary>Campo nativo BR <c>OBPL.ProfFax</c> (perfil/regime fiscal).</summary>
     public int RegimeTributario { get; set; }
-    /// <summary>UDF <c>U_MF_ATIVIDADE</c> na OBPL.</summary>
-    public string? Atividade { get; set; }
 }
