@@ -116,34 +116,33 @@ WHERE ""BPLId"" = :bplId";
 
     public async Task<Item?> GetItemAsync(string itemCode, CancellationToken ct)
     {
-        // Campos nativos BR: CESTCode (CEST) e ProductSrc (origem mercadoria 0-8).
+        // Campos nativos BR:
+        //   OITM.ProductSrc       -> origem da mercadoria (0-8).
+        //   ONCM.""Code""         -> NCM (join por OITM.NCMCode = ONCM.AbsEntry).
+        //   ONCM.""U_TX_CodigoCest""-> CEST (associado ao NCM, nao ao item).
         const string sql = @"
 SELECT
-  ""ItemCode"", ""ItemName"",
-  COALESCE(""NCMCode"", 0) AS ""NcmCode"",
-  COALESCE(""CESTCode"", '') AS ""Cest"",
-  COALESCE(""ProductSrc"", '0') AS ""Origem"",
-  ""InvntItem"", ""SellItem"", ""PrchseItem""
-FROM {0}.""OITM""
-WHERE ""ItemCode"" = :itemCode";
+  i.""ItemCode"",
+  i.""ItemName"",
+  COALESCE(i.""NCMCode"", 0)       AS ""NcmCode"",
+  COALESCE(n.""Code"", '')         AS ""Ncm"",
+  COALESCE(n.""U_TX_CodigoCest"", '') AS ""Cest"",
+  COALESCE(i.""ProductSrc"", '0')  AS ""Origem"",
+  i.""InvntItem"", i.""SellItem"", i.""PrchseItem""
+FROM {0}.""OITM"" i
+LEFT JOIN {0}.""ONCM"" n ON n.""AbsEntry"" = i.""NCMCode""
+WHERE i.""ItemCode"" = :itemCode";
 
         using var cn = _factory.Create();
         cn.Open();
         var row = await QueryFirstOrDefaultAsync<ItemRow>(cn, string.Format(sql, _factory.QuotedSchema), new { itemCode }, ct);
         if (row is null) return null;
 
-        string ncm = string.Empty;
-        if (row.NcmCode > 0)
-        {
-            const string sqlNcm = @"SELECT ""Code"" FROM {0}.""ONCM"" WHERE ""AbsEntry"" = :absEntry";
-            ncm = await QueryFirstOrDefaultAsync<string>(cn, string.Format(sqlNcm, _factory.QuotedSchema), new { absEntry = row.NcmCode }, ct) ?? string.Empty;
-        }
-
         return new Item
         {
             ItemCode = row.ItemCode,
             ItemName = row.ItemName ?? string.Empty,
-            Ncm = ncm,
+            Ncm = row.Ncm ?? string.Empty,
             Cest = row.Cest ?? string.Empty,
             OrigemMercadoria = int.TryParse(row.Origem, out var o) ? o : 0,
             InventoryItem = string.Equals(row.InvntItem, "Y", StringComparison.OrdinalIgnoreCase),
@@ -243,6 +242,7 @@ WHERE ""TableID"" = :tableId AND ""AliasID"" = :aliasId";
         public string ItemCode { get; set; } = string.Empty;
         public string? ItemName { get; set; }
         public int NcmCode { get; set; }
+        public string? Ncm { get; set; }
         public string? Cest { get; set; }
         public string? Origem { get; set; }
         public string? InvntItem { get; set; }

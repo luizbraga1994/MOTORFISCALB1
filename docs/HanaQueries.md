@@ -58,14 +58,17 @@ WHERE "BPLId" = :bplId
 
 ## Item (OITM + ONCM)
 
-`CESTCode` e `ProductSrc` são campos nativos da localização BR (CEST e
-origem da mercadoria 0-8).
+- `OITM.ProductSrc` — origem da mercadoria (0-8), campo nativo BR.
+- `ONCM.Code` — NCM (classificação), via `AbsEntry = OITM.NCMCode`.
+- `ONCM.U_TX_CodigoCest` — CEST **associado ao NCM**, não ao item.
+  Demais campos fiscais relevantes do NCM: `U_TX_FatorTrib`,
+  `U_TX_UTrib`, `U_TX_GerarRastreabilidade`.
 
 ```sql
 SELECT
     i."ItemCode", i."ItemName",
-    n."Code"   AS "NCMCode",
-    i."CESTCode",
+    n."Code"              AS "Ncm",
+    n."U_TX_CodigoCest"   AS "Cest",
     i."ProductSrc"
 FROM "SBO_COMP"."OITM" i
 LEFT JOIN "SBO_COMP"."ONCM" n ON n."AbsEntry" = i."NCMCode"
