@@ -117,20 +117,21 @@ WHERE ""BPLId"" = :bplId";
     public async Task<Item?> GetItemAsync(string itemCode, CancellationToken ct)
     {
         // Campos nativos BR:
-        //   OITM.ProductSrc       -> origem da mercadoria (0-8).
-        //   ONCM.""Code""         -> NCM (join por OITM.NCMCode = ONCM.AbsEntry).
-        //   ONCM.""U_TX_CodigoCest""-> CEST (associado ao NCM, nao ao item).
+        //   OITM.ProductSrc  -> origem da mercadoria (0-8).
+        //   OITM.NCMCode     -> FK para ONCM.AbsEntry; ONCM.Code = NCM textual.
+        //   OITM.CESTCode    -> FK para OCEST.AbsId;  OCEST.Code = CEST textual.
         const string sql = @"
 SELECT
   i.""ItemCode"",
   i.""ItemName"",
-  COALESCE(i.""NCMCode"", 0)       AS ""NcmCode"",
-  COALESCE(n.""Code"", '')         AS ""Ncm"",
-  COALESCE(n.""U_TX_CodigoCest"", '') AS ""Cest"",
-  COALESCE(i.""ProductSrc"", '0')  AS ""Origem"",
+  COALESCE(i.""NCMCode"", 0)      AS ""NcmCode"",
+  COALESCE(n.""Code"", '')        AS ""Ncm"",
+  COALESCE(c.""Code"", '')        AS ""Cest"",
+  COALESCE(i.""ProductSrc"", '0') AS ""Origem"",
   i.""InvntItem"", i.""SellItem"", i.""PrchseItem""
 FROM {0}.""OITM"" i
-LEFT JOIN {0}.""ONCM"" n ON n.""AbsEntry"" = i.""NCMCode""
+LEFT JOIN {0}.""ONCM""  n ON n.""AbsEntry"" = i.""NCMCode""
+LEFT JOIN {0}.""OCEST"" c ON c.""AbsId""    = i.""CESTCode""
 WHERE i.""ItemCode"" = :itemCode";
 
         using var cn = _factory.Create();

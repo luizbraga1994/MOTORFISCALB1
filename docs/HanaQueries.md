@@ -56,22 +56,27 @@ FROM "SBO_COMP"."OBPL"
 WHERE "BPLId" = :bplId
 ```
 
-## Item (OITM + ONCM)
+## Item (OITM + ONCM + OCEST)
 
-- `OITM.ProductSrc` — origem da mercadoria (0-8), campo nativo BR.
-- `ONCM.Code` — NCM (classificação), via `AbsEntry = OITM.NCMCode`.
-- `ONCM.U_TX_CodigoCest` — CEST **associado ao NCM**, não ao item.
-  Demais campos fiscais relevantes do NCM: `U_TX_FatorTrib`,
-  `U_TX_UTrib`, `U_TX_GerarRastreabilidade`.
+Todos os atributos fiscais relevantes do item são campos **nativos** da
+localização BR:
+
+- `OITM.ProductSrc` — origem da mercadoria (0-8).
+- `OITM.NCMCode` — FK para `ONCM.AbsEntry`; `ONCM.Code` é o NCM textual.
+  Demais campos do NCM úteis ao motor: `U_TX_FatorTrib`, `U_TX_UTrib`,
+  `U_TX_GerarRastreabilidade`, `U_TX_CodigoCest`.
+- `OITM.CESTCode` — FK para `OCEST.AbsId`; `OCEST.Code` é o CEST textual
+  (override por item; o CEST padrão do NCM fica em `ONCM.U_TX_CodigoCest`).
 
 ```sql
 SELECT
     i."ItemCode", i."ItemName",
-    n."Code"              AS "Ncm",
-    n."U_TX_CodigoCest"   AS "Cest",
+    n."Code"   AS "Ncm",
+    c."Code"   AS "Cest",
     i."ProductSrc"
-FROM "SBO_COMP"."OITM" i
-LEFT JOIN "SBO_COMP"."ONCM" n ON n."AbsEntry" = i."NCMCode"
+FROM "SBO_COMP"."OITM"  i
+LEFT JOIN "SBO_COMP"."ONCM"  n ON n."AbsEntry" = i."NCMCode"
+LEFT JOIN "SBO_COMP"."OCEST" c ON c."AbsId"    = i."CESTCode"
 WHERE i."ItemCode" = :itemCode
 ```
 

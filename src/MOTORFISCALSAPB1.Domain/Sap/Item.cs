@@ -9,8 +9,7 @@ public class Item
     public string ItemName { get; set; } = string.Empty;
     public string Ncm { get; set; } = string.Empty;
     /// <summary>
-    /// CEST via <c>ONCM.U_TX_CodigoCest</c> (associado ao NCM, não ao item;
-    /// join <c>ONCM.AbsEntry = OITM.NCMCode</c>).
+    /// CEST via <c>OCEST.Code</c>, join <c>OCEST.AbsId = OITM.CESTCode</c>.
     /// </summary>
     public string Cest { get; set; } = string.Empty;
     /// <summary>Origem da mercadoria (0..8) — campo nativo BR <c>OITM.ProductSrc</c>.</summary>
